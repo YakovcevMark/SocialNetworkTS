@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import user from "../../../../assets/img/user.png"
+import {PostT} from "../../../../redux/profilePageReducer";
 
 
 const StyledPost = styled.div`
@@ -15,7 +16,7 @@ const StyledPost = styled.div`
   }
 
   .item {
-    
+
     display: grid;
     grid-template-columns: 2fr 16fr;
   }
@@ -27,30 +28,32 @@ const StyledPost = styled.div`
   }
 
   .item span {
-    padding:5px ;
+    padding: 5px;
     height: 100%;
-    background-color:  rgb(159, 87, 26) ;
+    background-color: rgb(159, 87, 26);
     border-radius: 5px;
     align-self: center;
   }
 
 `
-type PostPT = {
-    postText: string
-    likeCount: number
-}
-const Post: React.FC<PostPT> =
+
+const Post: React.FC<PostT> =
     ({
-         postText,
-         likeCount
+         id,
+         likesCount,
+         dislikesCount,
+         postBody,
+
      }) => {
         return <StyledPost>
             <div className='item'>
                 <img src={user} alt="user"/>
-                <span>{postText}</span>
+                <span>{postBody}</span>
             </div>
             <div className="payload">
-                <span>likes {likeCount}</span>
+                <span>likes {likesCount}</span>
+                <span> dislikes {dislikesCount}</span>
+
             </div>
         </StyledPost>
     };

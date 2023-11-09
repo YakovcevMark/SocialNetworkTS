@@ -1,18 +1,27 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import styled from "styled-components";
-type DialogContentPT ={
+import {DialogT} from "../../../redux/dialogsPageReducer";
 
+type DialogContentPT = {
+    dialog: DialogT
 }
 const DialogContent: React.FC<DialogContentPT> =
-    ({}) => {
+    ({
+         dialog
+     }) => {
+
+        const renderMessages = useMemo(() => {
+            return dialog.messages.map(m => <div
+                key={m.id}
+                className={m.type}>
+                {m.message}
+            </div>)
+        }, [dialog])
+
         return (
             <>
                 <StyledDialogContent>
-                    <div className='message'>I see u</div>
-                    <div className='message'>And</div>
-                    <div className='message'>I know it was</div>
-                    <div className='message'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi at culpa cumque esse nisi possimus quia repudiandae sunt vel voluptatem?</div>
-                    <div className='answer'>No!</div>
+                    {renderMessages}
                     <div className='newMessage'>
                         <textarea></textarea>
                         <button>Send message</button>
@@ -26,7 +35,8 @@ const StyledDialogContent = styled.div`
   display: grid;
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrCKVj1-g3zHrU5AeECjoDetg4Hmocpqa2BQ&usqp=CAU');
   word-break: break-word;
-  .message {
+
+  .input {
     max-width: 300px;
     justify-items: start;
     border: goldenrod 1px solid;
@@ -36,7 +46,8 @@ const StyledDialogContent = styled.div`
     background-color: rgba(48, 123, 222, 0.62);
 
   }
-  .answer {
+
+  .output {
     justify-self: end;
     border: goldenrod 1px solid;
     border-radius: 25px;
@@ -44,6 +55,7 @@ const StyledDialogContent = styled.div`
     margin: 2px;
     background-color: rgba(48, 222, 190, 0.62);
   }
+
   .newMessage {
     display: grid;
     grid-template-columns: 10fr 2fr;

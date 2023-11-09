@@ -1,36 +1,48 @@
-import React from 'react';
+import React, {createContext, useContext} from 'react';
 import './App.css';
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
-import Profile from "./components/Profile/Profile";
-import Dialogs from "./components/Dialogs/Dialogs";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import ProfileContainer from "./components/Profile/ProfileContainer";
+import DialogsContainer from "./components/Dialogs/DialogsContainer";
+import {
+    BrowserRouter,
+    Route,
+    Routes
+} from "react-router-dom";
 import styled from "styled-components";
+import {store, StoreT} from "./redux/State";
 
+const MyContext = createContext<StoreT | null>(null)
+export const useStoreContext = () => useContext(MyContext)
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
-            <MyApp>
-                <Header/>
-                <Navbar/>
-                <div className="content">
-                    <Routes>
-                        <Route path={"/profile"} element={<Profile/>}/>
-                        <Route path={"/dialogs/*"} element={<Dialogs/>}/>
-                    </Routes>
-                </div>
-            </MyApp>
-        </BrowserRouter>
+        <MyContext.Provider value={store}>
+            <BrowserRouter>
+                <StyledApp>
+                    <Header/>
+                    <Navbar/>
+                    <div className="content">
+                        <Routes>
+                            <Route path={"/profile"} element={<ProfileContainer/>}/>
+                            <Route path={"/dialogs"} >
+                                <Route path={""} element={<DialogsContainer/>}/>
+                                <Route path={":userId"} element={<DialogsContainer/>} />
+                            </Route>
+                        </Routes>
+                    </div>
+                </StyledApp>
+            </BrowserRouter>
+        </MyContext.Provider>
     );
 }
-const MyApp = styled.div`
+const StyledApp = styled.div`
   margin: 0 auto;
   padding: 0 20px 0 20px;
   display: grid;
   width: 80%;
   grid-template-areas: "h h"
                        "n c";
-  
+
   grid-template-columns: 2fr 10fr;
   grid-gap: 2px;
 
