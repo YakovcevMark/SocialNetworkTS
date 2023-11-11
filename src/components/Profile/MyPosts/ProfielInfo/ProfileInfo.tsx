@@ -20,7 +20,7 @@ const ProfileInfo:React.FC<ProfileInfoPT> =
      }) => {
         return (
             <StyledProfileInfo>
-                <img src={user} alt="ProfilePhoto"/>
+                <img src={user} alt=""/>
                 <div>Description</div>
             </StyledProfileInfo>
         );

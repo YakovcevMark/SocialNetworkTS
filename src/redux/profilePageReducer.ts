@@ -8,22 +8,24 @@ export type PostT = {
     dislikesCount: number
 }
 
-export type ProfileStateT = {
-    postsData: PostT[]
-    profileInfo?: { } | null
-    status?: string
-    isFetching?: boolean
-}
+export type ProfileStateT = typeof profilePage
+    // {
+    // postsData: PostT[]
+    // profileInfo?: { } | null
+    // status?: string
+    // isFetching?: boolean
+// }
 
-const profilePage:ProfileStateT= {
+const profilePage  = {
     postsData: [
         {id: 0, postBody: "Hi! I love you", likesCount: 15, dislikesCount: 0},
         {id: 1, postBody: "i really hate u!!!!!!!!!!!", likesCount: 20, dislikesCount: 0},
-    ],
-    profileInfo: null,
+    ] as PostT[],
+    profileInfo: {},
     status: '',
     isFetching: true,
-};
+}
+
 export const profilePageReducer = (state: ProfileStateT = profilePage, action: ActionTypesAT):ProfileStateT => {
     switch (action.type) {
         case "ADD_POST":
@@ -32,7 +34,7 @@ export const profilePageReducer = (state: ProfileStateT = profilePage, action: A
                 postBody: action.newPostBody,
                 likesCount: 0,
                 dislikesCount:0
-            };
+            }
             return {
                 ...state,
                 postsData: [...state.postsData, newPost]
@@ -78,18 +80,18 @@ export const addPost = (newPostBody: string) => (
 export const deletePost = (postId: number) => (
     {type: "DELETE_POST", postId} as const
 )
-export const setProfileInfo = (profileInfo: {}) => (
+export const setProfileInfo = (profileInfo: any) => (
     {type: "SET_PROFILE_INFO", profileInfo} as const
 )
 export const togglePreloader = (isFetching: boolean) => (
     {type: "TOGGLE_PRELOADER", isFetching} as const
-);
+)
 export const setProfileStatus = (status: string) => (
     {type: "SET_PROFILE_STATUS", status} as const
-);
+)
 export const setProfilePhoto = (photos: any) => (
     {type: "SET_PROFILE_PHOTO", photos} as const
-);
+)
 // export const getProfileInfoRequest = (userId) => async (dispatch) => {
 //     dispatch(togglePreloader(true));
 //     const resp = await profileAPI.getProfile(userId)

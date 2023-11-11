@@ -1,23 +1,25 @@
-import React, {createContext, useContext} from 'react';
+import React from 'react';
 import './App.css';
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import {
-    BrowserRouter,
+    HashRouter,
     Route,
     Routes
 } from "react-router-dom";
 import styled from "styled-components";
-import {store, StoreT} from "./redux/State";
+// import {store, StoreT} from "./redux/State";
+import {Provider} from "react-redux";
+import {store} from "./redux/reduxStore";
+import Preloader from "./components/common/Preloader/Preloader";
+import UsersContainer from "./components/Users/UsersContainer";
 
-const MyContext = createContext<StoreT | null>(null)
-export const useStoreContext = () => useContext(MyContext)
 const App: React.FC = () => {
     return (
-        <MyContext.Provider value={store}>
-            <BrowserRouter>
+        <Provider store={store}>
+            <HashRouter>
                 <StyledApp>
                     <Header/>
                     <Navbar/>
@@ -28,11 +30,12 @@ const App: React.FC = () => {
                                 <Route path={""} element={<DialogsContainer/>}/>
                                 <Route path={":userId"} element={<DialogsContainer/>} />
                             </Route>
+                            <Route path={"/users"} element={<UsersContainer/>}/>
                         </Routes>
                     </div>
                 </StyledApp>
-            </BrowserRouter>
-        </MyContext.Provider>
+            </HashRouter>
+        </Provider>
     );
 }
 const StyledApp = styled.div`

@@ -1,0 +1,40 @@
+.item {
+    display: grid;
+    width: 300px;
+    grid-template-columns: 1fr 2fr;
+    grid-gap:5px;
+    margin:5px;
+}
+
+.item img {
+    width: 100px;
+    height: 100px;
+
+}
+.item .description{
+
+    align-items: center;
+    justify-items: center;
+
+}
+.item .name {
+    font-weight: bold;
+}
+.item .status {
+    font-weight: initial;
+}
+
+.selectedPage {
+    font-weight: bold;
+    padding: 0 20px;
+}
+
+.paginationItem {
+    padding: 0 5px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}

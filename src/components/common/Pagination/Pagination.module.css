@@ -1,0 +1,12 @@
+.selectedPage {
+    font-weight: bold;
+    padding: 0 20px;
+}
+.paginationItem {
+    padding: 0 5px;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}

@@ -1,14 +1,18 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import styled from "styled-components";
 import {DialogT} from "../../../redux/dialogsPageReducer";
 
 type DialogContentPT = {
     dialog: DialogT
+    addMessage: (newMessageBody:string, dialogId:number) => void
 }
 const DialogContent: React.FC<DialogContentPT> =
     ({
-         dialog
+         dialog,
+         addMessage
      }) => {
+
+        const [title, setTitle] = useState("")
 
         const renderMessages = useMemo(() => {
             return dialog.messages.map(m => <div
@@ -18,19 +22,26 @@ const DialogContent: React.FC<DialogContentPT> =
             </div>)
         }, [dialog])
 
+        const onAddMessage = () => {
+            addMessage(title,dialog.id)
+            setTitle("");
+        }
         return (
             <>
                 <StyledDialogContent>
                     {renderMessages}
                     <div className='newMessage'>
-                        <textarea></textarea>
-                        <button>Send message</button>
+                        <textarea value={title} onChange={(e) => setTitle(e.currentTarget.value)}></textarea>
+                        <button onClick={onAddMessage}>Send message</button>
                     </div>
                 </StyledDialogContent>
             </>
 
         );
     };
+
+export default DialogContent;
+
 const StyledDialogContent = styled.div`
   display: grid;
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrCKVj1-g3zHrU5AeECjoDetg4Hmocpqa2BQ&usqp=CAU');
@@ -61,4 +72,3 @@ const StyledDialogContent = styled.div`
     grid-template-columns: 10fr 2fr;
   }
 `
-export default DialogContent;
