@@ -1,42 +1,66 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import MyPosts from "./MyPosts/MyPosts";
 import ProfileInfo from "./MyPosts/ProfielInfo/ProfileInfo";
+import profileInfo from "./MyPosts/ProfielInfo/ProfileInfo";
 import {connect} from "react-redux";
-import {addPost, ProfileStateT} from "../../redux/profilePageReducer";
+import {addPost, PostT, ProfileInfoT, setProfileInfo, togglePreloader} from "../../redux/profilePageReducer";
 import {AppStateType} from "../../redux/reduxStore";
-import {Dispatch} from "redux";
+import {useParams} from "react-router";
+import axios from "axios";
+import Preloader from "../common/Preloader/Preloader";
 type ProfileContainerPT = MapStateToPropsT & MapDispatchToPropsT
-const ProfileContainer:React.FC<ProfileContainerPT> = (
+const ProfileContainer: React.FC<ProfileContainerPT> = (
     {
-        state,
-        addPost
+        posts,
+        addPost,
+        setProfileInfo,
+        profileInfo,
+        isFetching,
+        togglePreloader
     }) => {
-    // const store = useStoreContext()
-    return (
-        <div>
-            <ProfileInfo/>
-            <MyPosts postsData={state.postsData} addNewPost={addPost}/>
-        </div>
+    const {userId} = useParams()
+    useEffect(() => {
+        togglePreloader(true)
+        const requestParameter = userId ? +userId : 30061
+        axios
+            .get(`https://social-network.samuraijs.com/api/1.0/profile/${requestParameter}`)
+            .then(resp => {
+                setProfileInfo(resp.data)
+                togglePreloader(false)
+            })
+    }, [userId, setProfileInfo,togglePreloader])
+    // console.log(userId)
 
+    return isFetching ? <Preloader/> : (
+        <div>
+            <ProfileInfo profileInfo={profileInfo}/>
+            <MyPosts postsData={posts} addNewPost={addPost}/>
+        </div>
     );
 };
 type MapStateToPropsT = {
-    state: ProfileStateT
+    profileInfo: ProfileInfoT
+    posts: PostT[]
+    isFetching: boolean
 }
 type MapDispatchToPropsT = {
-    addPost: (newPostBody:string) => void
+    addPost: (newPostBody: string) => void
+    setProfileInfo: (profileInfo: ProfileInfoT) => void
+    togglePreloader:(v:boolean) => void
 }
-const mapStateToProps = (state:AppStateType):MapStateToPropsT => {
-    return{
-        state: state.profilePage
+const mapStateToProps = (state: AppStateType): MapStateToPropsT => {
+    return {
+        profileInfo: state.profilePage.profileInfo,
+        posts: state.profilePage.postsData,
+        isFetching:state.profilePage.isFetching
     }
 }
-const mapDispatchToProps = (dispatch: Dispatch):MapDispatchToPropsT => {
-    return{
-        addPost:(newPostBody:string) =>{
-            dispatch(addPost(newPostBody))
-        }
-    }
-
-}
-export default connect(mapStateToProps,mapDispatchToProps)(ProfileContainer);
+// const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsT => {
+//     return {
+//         addPost: (newPostBody: string) => {
+//             dispatch(addPost(newPostBody))
+//         }
+//     }
+//
+// }
+export default connect(mapStateToProps, {addPost, setProfileInfo, togglePreloader})(ProfileContainer);

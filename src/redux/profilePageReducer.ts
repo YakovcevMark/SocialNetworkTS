@@ -1,39 +1,47 @@
-import {v1} from "uuid";
-
-
 export type PostT = {
     id: number
     postBody: string
     likesCount: number
     dislikesCount: number
 }
+export type ContactT = {
+    [key: string]: string
 
+}
+export type PhotosT = {
+    small: string
+    large: string
+}
+export type ProfileInfoT = {
+    aboutMe: string
+    contacts: ContactT
+
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    fullName: string
+    userId: number
+    photos: PhotosT
+}
 export type ProfileStateT = typeof profilePage
-    // {
-    // postsData: PostT[]
-    // profileInfo?: { } | null
-    // status?: string
-    // isFetching?: boolean
-// }
 
-const profilePage  = {
+const profilePage = {
     postsData: [
         {id: 0, postBody: "Hi! I love you", likesCount: 15, dislikesCount: 0},
         {id: 1, postBody: "i really hate u!!!!!!!!!!!", likesCount: 20, dislikesCount: 0},
     ] as PostT[],
-    profileInfo: {},
+    profileInfo: {} as ProfileInfoT,
     status: '',
     isFetching: true,
 }
 
-export const profilePageReducer = (state: ProfileStateT = profilePage, action: ActionTypesAT):ProfileStateT => {
+export const profilePageReducer = (state: ProfileStateT = profilePage, action: ActionTypesAT): ProfileStateT => {
     switch (action.type) {
         case "ADD_POST":
             const newPost = {
                 id: state.postsData.length + 1,
                 postBody: action.newPostBody,
                 likesCount: 0,
-                dislikesCount:0
+                dislikesCount: 0
             }
             return {
                 ...state,
@@ -80,7 +88,7 @@ export const addPost = (newPostBody: string) => (
 export const deletePost = (postId: number) => (
     {type: "DELETE_POST", postId} as const
 )
-export const setProfileInfo = (profileInfo: any) => (
+export const setProfileInfo = (profileInfo: ProfileInfoT) => (
     {type: "SET_PROFILE_INFO", profileInfo} as const
 )
 export const togglePreloader = (isFetching: boolean) => (

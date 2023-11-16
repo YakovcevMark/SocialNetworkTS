@@ -10,10 +10,8 @@ import {
     Routes
 } from "react-router-dom";
 import styled from "styled-components";
-// import {store, StoreT} from "./redux/State";
 import {Provider} from "react-redux";
 import {store} from "./redux/reduxStore";
-import Preloader from "./components/common/Preloader/Preloader";
 import UsersContainer from "./components/Users/UsersContainer";
 
 const App: React.FC = () => {
@@ -25,7 +23,10 @@ const App: React.FC = () => {
                     <Navbar/>
                     <div className="content">
                         <Routes>
-                            <Route path={"/profile"} element={<ProfileContainer/>}/>
+                            <Route path={"/profile"}>
+                                <Route path={""} element={<ProfileContainer/>}/>
+                                <Route path={":userId"} element={<ProfileContainer/>} />
+                            </Route>
                             <Route path={"/dialogs"} >
                                 <Route path={""} element={<DialogsContainer/>}/>
                                 <Route path={":userId"} element={<DialogsContainer/>} />

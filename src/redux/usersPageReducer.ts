@@ -1,5 +1,6 @@
-// import {usersAPI} from "../api/samuraiAPI";
+import {usersAPI} from "../api/samuraiAPI";
 import {updateObjectInArray} from "../utils/reducer-helpers"
+import {Dispatch} from "redux";
 
 export type UserT = {
     id: number
@@ -45,7 +46,6 @@ const usersPageReducer = (state: UsersStateT = usersPage, action: ActionsType): 
         case "UNFOLLOW":
             return {
                 ...state,
-
                 users: updateObjectInArray(state.users,
                     action.userId,
                     "id",
@@ -85,13 +85,13 @@ const usersPageReducer = (state: UsersStateT = usersPage, action: ActionsType): 
     }
 }
 type ActionsType =
-    ReturnType<typeof follow> | ReturnType<typeof unFollow> |
+    ReturnType<typeof makeFollow> | ReturnType<typeof makeUnFollow> |
     ReturnType<typeof setUsers> | ReturnType<typeof setTotalUsersCount> |
     ReturnType<typeof setCurrentPage> | ReturnType<typeof togglePreloader> |
     ReturnType<typeof toggleFollowingInProgress>
-export const follow = (userId: number) =>
+export const makeFollow = (userId: number) =>
     ({type: "FOLLOW", userId} as const);
-export const unFollow = (userId: number) =>
+export const makeUnFollow = (userId: number) =>
     ({type: "UNFOLLOW", userId} as const);
 export const setUsers = (users: UserT[]) =>
     ({type: "SET_USERS", users} as const);
@@ -113,14 +113,14 @@ export const toggleFollowingInProgress = (isFetching:boolean, userId:number) =>
 //         dispatch(action(userId));
 //     dispatch(toggleFollowingInProgress(false, userId));
 // }
-// export const getUsersRequest = (pageSize, currentPage) => async (dispatch) => {
-//     dispatch(togglePreloader(true));
-//     const resp = await usersAPI.getUsersRequest(pageSize, currentPage)
-//     dispatch(togglePreloader(false));
-//     dispatch(setUsers(resp.data.items));
-//     dispatch(setTotalUsersCount(resp.data.totalCount));
-//
-// }
+export const getUsersRequest = (pageSize:number, currentPage:number) => async (dispatch: Dispatch) => {
+    dispatch(togglePreloader(true));
+    const resp = await usersAPI.getUsersRequest(pageSize, currentPage)
+    dispatch(togglePreloader(false));
+    dispatch(setUsers(resp.data.items));
+    dispatch(setTotalUsersCount(resp.data.totalCount));
+
+}
 // export const makeFollow = (userId) => async (dispatch) => {
 //     await followUnfollowFlow(userId, usersAPI.makeFollow.bind(usersAPI), follow, dispatch)
 // }

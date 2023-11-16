@@ -12,16 +12,16 @@ const StyledMyPosts = styled.div`
   }
 `
 type MyPostsPT = {
-    postsData?:PostT[]
+    postsData:PostT[]
     addNewPost?:(postBody:string) => void
 }
 const MyPosts: React.FC<MyPostsPT> = ({postsData,addNewPost}) => {
     const posts = useMemo(() => {
         return postsData?.map(p => <Post key={p.id}
-                                         postBody={p.postBody}
-                                         likesCount={p.likesCount}
-                                         dislikesCount={p.dislikesCount}
-                                         id={p.id}
+                                     postBody={p.postBody}
+                                     likesCount={p.likesCount}
+                                     dislikesCount={p.dislikesCount}
+                                     id={p.id}
         />)
     }, [postsData])
     const [title,setTitle] = useState<string>("")

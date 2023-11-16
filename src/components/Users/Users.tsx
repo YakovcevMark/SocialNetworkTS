@@ -1,16 +1,23 @@
 import React, {useMemo} from "react";
 import {UserT} from "../../redux/usersPageReducer";
-import User from "./User";
+import User from "./User/User";
 import {UsersContainerPT} from "./UsersContainer";
+import Pagination from "../common/Pagination/Pagination";
+import Preloader from "../common/Preloader/Preloader";
 
-type UsersPT = Omit<UsersContainerPT,"setUsers">
+type UsersPT = Omit<UsersContainerPT, "setUsers" | "setTotalUsersCount" | "togglePreloader">
 const Users: React.FC<UsersPT> =
     ({
          users,
          makeUnFollow,
          makeFollow,
          followingInProgress,
-         toggleFollowingInProgress
+         toggleFollowingInProgress,
+         pageSize,
+         currentPage,
+         setCurrentPage,
+        totalUsersCount,
+        isFetching
      }) => {
         const renderedUsers = useMemo(() => {
             return users.map((u: UserT) => <User key={u.id}
@@ -23,33 +30,23 @@ const Users: React.FC<UsersPT> =
                                                  makeUnFollow={makeUnFollow}
                                                  followingInProgress={followingInProgress}
                                                  toggleFollowingInProgress={toggleFollowingInProgress}
+                                                 // pageSize={pageSize}
+                                                 // currentPage={currentPage}
+
 
             />)
         }, [users])
         return (
-
             <>
-                {renderedUsers}
-                {/*<Pagination*/}
-                {/*    totalItemsCount={props.totalUsersCount}*/}
-                {/*    pageSize={props.pageSize}*/}
-                {/*    currentPage={props.currentPage}*/}
-                {/*    pageChanged={props.pageChanged}*/}
-                {/*/>*/}
-                {/*{props.isFetching ? <Preloader/> :*/}
-                {/*    props.users.map(u => <User*/}
-                {/*        key={u.id}*/}
-                {/*        id={u.id}*/}
-                {/*        photos={u.photos}*/}
-                {/*        followed={u.followed}*/}
-                {/*        followingInProgress={props.followingInProgress}*/}
-                {/*        toggleFollowingInProgress={props.toggleFollowingInProgress}*/}
-                {/*        makeUnFollow={props.makeUnFollow}*/}
-                {/*        makeFollow={props.makeFollow}*/}
-                {/*        name={u.name}*/}
-                {/*        status={u.status}*/}
-                {/*        location={u.location}*/}
-                {/*    />)}*/}
+                <Pagination
+                    totalItemsCount={totalUsersCount}
+                    pageSize={pageSize}
+                    currentPage={currentPage}
+                    pageChanged={setCurrentPage}
+                />
+                {}
+                {isFetching ? <Preloader/> : renderedUsers}
+
             </>
         )
     }
