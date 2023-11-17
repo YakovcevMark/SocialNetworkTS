@@ -4,6 +4,7 @@ import {NavLink} from "react-router-dom";
 import userPNG from "../../../assets/img/user.png"
 import {UserT} from "../../../redux/usersPageReducer";
 import {UsersContainerPT} from "../UsersContainer";
+import {usersAPI} from "../../../api/samuraiAPI";
 
 type UserPT =
     UserT
@@ -21,6 +22,26 @@ const User: React.FC<UserPT> =
          followed,
          // location
      }) => {
+        const onMakeFollow = () => {
+            toggleFollowingInProgress(true, id);
+            usersAPI.makeFollow(id)
+                .then(resp => {
+                    if (resp.data.resultCode === 0) {
+                        toggleFollowingInProgress(false, id);
+                        makeFollow(id);
+                    }
+                })
+        }
+        const onMakeUnFollow = () => {
+            toggleFollowingInProgress(true, id);
+           usersAPI.makeUnFollow(id)
+                .then(resp => {
+                    if (resp.data.resultCode === 0) {
+                        toggleFollowingInProgress(false, id);
+                        makeUnFollow(id);
+                    }
+                })
+        }
         return (
             <>
                 <div className={s.item}>
@@ -36,15 +57,9 @@ const User: React.FC<UserPT> =
                         {
                             followed
                                 ? <button disabled={followingInProgress.some(userId => userId === id)}
-                                          onClick={() => {
-                                              // toggleFollowingInProgress(true, id);
-                                              makeUnFollow(id);
-                                          }}>UnFollow</button>
+                                          onClick={onMakeUnFollow}>UnFollow</button>
                                 : <button disabled={followingInProgress.some(userId => userId === id)}
-                                          onClick={() => {
-                                              // toggleFollowingInProgress(true, id);
-                                              makeFollow(id);
-                                          }}>Follow</button>}
+                                          onClick={onMakeFollow}>Follow</button>}
                     </div>
                 </div>
             </>

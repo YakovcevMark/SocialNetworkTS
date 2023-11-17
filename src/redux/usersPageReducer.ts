@@ -54,7 +54,7 @@ const usersPageReducer = (state: UsersStateT = usersPage, action: ActionsType): 
         case "SET_USERS":
             return {
                 ...state,
-                users: action.users
+                users: [...action.users]
             }
         case "SET_TOTAL_USERS_COUNT":
             return {
@@ -78,7 +78,7 @@ const usersPageReducer = (state: UsersStateT = usersPage, action: ActionsType): 
                     action.isFetching
                         ? [...state.followingInProgress, action.userId]
                         : state.followingInProgress.filter(id => id !== action.userId),
-                // isFetching: false
+                isFetching: false
             }
         default:
             return state;

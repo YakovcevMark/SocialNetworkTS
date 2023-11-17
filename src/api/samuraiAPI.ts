@@ -1,18 +1,22 @@
 import axios from "axios";
+import {AuthUserDataT} from "../redux/authReducer";
+import {ProfileInfoT} from "../redux/profilePageReducer";
 
 const instance = axios.create({
     baseURL: "https://social-network.samuraijs.com/api/1.0/",
     withCredentials: true,
-    headers: {"API-KEY": "8d09abf8-2a50-4564-8e2f-d00a6cf398df"}
+    headers: {
+        "API-KEY": "8d09abf8-2a50-4564-8e2f-d00a6cf398df"
+    }
 })
 export const usersAPI = {
-    getUsersRequest(pageSize, currentPage) {
+    getUsersRequest(pageSize:number, currentPage:number) {
         return instance.get(`users?count=${pageSize}&page=${currentPage}`);
     },
-    makeFollow(userId) {
+    makeFollow(userId:number) {
         return instance.post(`follow/${userId}`);
     },
-    makeUnFollow(userId) {
+    makeUnFollow(userId:number) {
         return instance.delete(`follow/${userId}`);
     }
 }
@@ -20,7 +24,7 @@ export const authAPI = {
     authorization() {
         return instance.get(`auth/me`);
     },
-    login(data) {
+    login(data:AuthUserDataT) {
         return instance.post(`auth/login`, {...data});
     },
     logout() {
@@ -34,23 +38,23 @@ export const securityAPI = {
 
 }
 export const profileAPI = {
-    getProfile(userId) {
+    getProfile(userId:number) {
         return instance.get(`profile/${userId}`);
     },
-    getStatus(userId) {
+    getStatus(userId:number) {
         return instance.get(`profile/status/${userId}`);
     },
-    updateStatus(status) {
+    updateStatus(status:string) {
         return instance.put(`profile/status`, {status});
     },
-    updateProfile(profile) {
+    updateProfile(profile:ProfileInfoT) {
         return instance.put(`profile`, {...profile});
     },
-    savePhoto(file) {
+    savePhoto(file:File) {
         const formData = new FormData();
         formData.append("image", file)
         return instance.put(`profile/photo`, formData, {
-            header: {
+            headers: {
                 'Content-Type': 'multipart/form-data'
             }
         })

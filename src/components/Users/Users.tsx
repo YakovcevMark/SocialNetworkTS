@@ -35,7 +35,7 @@ const Users: React.FC<UsersPT> =
 
 
             />)
-        }, [users])
+        }, [users,makeFollow,makeUnFollow,followingInProgress,toggleFollowingInProgress])
         return (
             <>
                 <Pagination

@@ -13,6 +13,7 @@ const Preloader:React.FC<PreloaderPT> = ({
     </StyledPreloader>
 }
 const StyledPreloader = styled.div`
+  display: flex;
   justify-self: center;
   align-self: center;
   .loader,

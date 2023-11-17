@@ -1,26 +1,31 @@
-// import {authAPI, securityAPI} from "../api/samuraiAPI";
-//
-// const SET_AUTH_USER_INFO = "auth_reducer/SET_AUTH_USER_INFO"
-// const SET_CAPTCHA_URL = "auth_reducer/CLOSE_USER_SESSION";
-// const initialState = {
-//     email: null,
-//     id: null,
-//     login: null,
-//     isAuth: false,
-//     captchaURL: null
-// }
-// const autReducer = (state = initialState, action) => {
-//     switch (action.type) {
-//         case SET_AUTH_USER_INFO:
-//             return {...state, isAuth: true, ...action.data}
-//         case SET_CAPTCHA_URL:
-//             return {...state, captchaURL: action.captchaURL}
-//         default:
-//             return state;
-//     }
-// }
-// export const setAuthUserData = (data) => ({type: SET_AUTH_USER_INFO, data});
-// export const setCaptchaUrl = (captchaURL) => ({type: SET_CAPTCHA_URL, captchaURL});
+import {authAPI, securityAPI} from "../api/samuraiAPI";
+
+export type AuthUserDataT = {
+    email: string
+    id: number
+    login: string
+}
+const initialState = {
+    data: {} as AuthUserDataT,
+    isAuth: false,
+    captchaURL: ""
+}
+export type AuthStateT = typeof initialState
+const autReducer = (state: AuthStateT = initialState, action: ActionsType): AuthStateT => {
+    switch (action.type) {
+        case "SET_AUTH_USER_INFO":
+            return {...state, isAuth: true, data: {...action.data}}
+        // case "SET_CAPTCHA_URL":
+        //     return {...state, captchaURL: action.captchaURL}
+        default:
+            return state;
+    }
+}
+type ActionsType =
+    ReturnType<typeof setAuthUserData>
+    //| ReturnType<typeof setCaptchaUrl>
+export const setAuthUserData = (data:AuthUserDataT) => ({type: "SET_AUTH_USER_INFO", data} as const);
+// export const setCaptchaUrl = (captchaURL) => ({type: "SET_CAPTCHA_URL", captchaURL} as const);
 //
 // export const getAuthUserData = () => async (dispatch) => {
 //     const resp = await authAPI.authorization();
@@ -48,6 +53,7 @@
 //             id: null,
 //             login: null,
 //             isAuth: false,
-//             captchaURL: null}));
+//             captchaURL: null
+//         }));
 // }
-// export default autReducer;
+export default autReducer;

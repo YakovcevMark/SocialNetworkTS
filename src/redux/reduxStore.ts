@@ -6,6 +6,7 @@ import {dialogsPageReducer} from "./dialogsPageReducer";
 // import autReducer from "./authReducer";
 import thunk from 'redux-thunk';
 import usersPageReducer from "./usersPageReducer";
+import autReducer from "./authReducer";
 // import app_reducer from "./appReducer";
 
 const rootReducer = combineReducers({
@@ -13,7 +14,7 @@ const rootReducer = combineReducers({
     dialogsPage: dialogsPageReducer,
     usersPage: usersPageReducer,
     // sidebar: sidebarPageReducer,
-    // auth: autReducer,
+    auth: autReducer,
     // app: app_reducer,
 
 });
@@ -22,4 +23,5 @@ const rootReducer = combineReducers({
 // let store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 export type AppStateType = ReturnType<typeof rootReducer>
 export const store = createStore(rootReducer)
-
+// @ts-ignore
+window.store = store //for dev

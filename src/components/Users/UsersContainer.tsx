@@ -17,6 +17,7 @@ import {
     UserT
 } from "../../redux/usersPageReducer";
 import axios from "axios";
+import {usersAPI} from "../../api/samuraiAPI";
 // import {
 //     getCurrentPage,
 //     getFollowingInProgress,
@@ -47,25 +48,20 @@ const UsersContainer: React.FC<UsersContainerPT> =
         //     getUsersRequest(pageSize, currentPage);
         //
         // }, [currentPage, getUsersRequest, pageSize])
-
-        function onPageChanged(numberOfPage:number) {
-            setCurrentPage(numberOfPage);
-            getUsers(pageSize, numberOfPage)
-        }
-        function getUsers(pageSize:number,currentPage:number ){
+        useEffect(() => {
             togglePreloader(true)
-            axios
-                .get(`https://social-network.samuraijs.com/api/1.0/users?count=${pageSize}&page=${currentPage}`)
+           usersAPI.getUsersRequest(pageSize,currentPage)
                 .then(resp => {
                     setUsers(resp.data.items)
                     setTotalUsersCount(resp.data.totalCount)
                     togglePreloader(false)
-
                 })
+        },[pageSize,currentPage,togglePreloader,setUsers,setTotalUsersCount])
+
+        function onPageChanged(numberOfPage:number) {
+            setCurrentPage(numberOfPage);
         }
-        if(users.length === 0) {
-            getUsers(pageSize,currentPage)
-        }
+
         // useLayoutEffect(() => {
         //
         // },[])

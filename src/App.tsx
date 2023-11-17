@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
@@ -13,13 +12,14 @@ import styled from "styled-components";
 import {Provider} from "react-redux";
 import {store} from "./redux/reduxStore";
 import UsersContainer from "./components/Users/UsersContainer";
+import HeaderContainer from "./components/Header/HeaderContainer";
 
 const App: React.FC = () => {
     return (
         <Provider store={store}>
             <HashRouter>
                 <StyledApp>
-                    <Header/>
+                    <HeaderContainer/>
                     <Navbar/>
                     <div className="content">
                         <Routes>
