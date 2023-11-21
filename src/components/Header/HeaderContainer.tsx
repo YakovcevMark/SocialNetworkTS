@@ -1,29 +1,20 @@
 import React, {memo, useEffect} from 'react';
-import {compose} from "redux";
 import {connect} from "react-redux";
 import Header from "./Header";
-import {AuthUserDataT, setAuthUserData} from "../../redux/authReducer";
+import {getAuthUserData} from "../../redux/authReducer";
 import {AppStateType} from "../../redux/reduxStore";
-import axios from "axios";
-import Preloader from "../common/Preloader/Preloader";
-import {authAPI} from "../../api/samuraiAPI";
 
 const HeaderContainer: React.FC<HeaderContainerPT> =
     ({
          isAuth,
          login,
-         setAuthUserData
+         getAuthUserData
      }) => {
         useEffect(() => {
-            authAPI.authorization()
-                .then(resp => {
-                    if (resp.data.resultCode === 0) {
-                        setAuthUserData(resp.data.data)
-                    }
-                })
-        }, [setAuthUserData])
+            getAuthUserData()
+        }, [getAuthUserData])
         return (
-            isAuth ? <Header login={login}/> : <Preloader/>
+            <Header isAuth={isAuth} login={login}/>
         );
     };
 type HeaderContainerPT = HeaderContainerT & {}
@@ -33,10 +24,10 @@ type MapStateToPropsT = {
     login: string
 }
 type MapDispatchToPropsT = {
-    setAuthUserData: (data: AuthUserDataT) => void
+    getAuthUserData: () => void
 }
 const mapStateToProps = (state: AppStateType): MapStateToPropsT => ({
     isAuth: state.auth.isAuth,
     login: state.auth.data.login
 })
-export default memo(connect(mapStateToProps, {setAuthUserData})(HeaderContainer));
+export default memo(connect(mapStateToProps, {getAuthUserData})(HeaderContainer));

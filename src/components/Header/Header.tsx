@@ -1,18 +1,23 @@
 import React from 'react';
 import img from "../../assets/img/logo.png";
 import styled from "styled-components";
+import {Navigate, NavLink} from "react-router-dom";
 
 type HeaderPT = {
     login?: string
+    isAuth: boolean
 }
 const Header: React.FC<HeaderPT> =
     ({
+        isAuth,
          login
      }) => {
         return (
             <StyledHeader>
                 <img src={img} alt="."/>
-                <div className="userInfo">{login}</div>
+                {isAuth
+                    ? <div className="userInfo">{login}</div>
+                    : <NavLink to={'login'}>login</NavLink>}
             </StyledHeader>
         );
     };

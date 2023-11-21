@@ -7,22 +7,32 @@ import {addMessage, DialogsStateT} from "../../redux/dialogsPageReducer";
 import {AppStateType} from "../../redux/reduxStore";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
+import {Navigate} from "react-router-dom";
 
 type DialogsContainerPT = MapStateToPropsT & MapDispatchToPropsT
 
 const DialogsContainer: React.FC<DialogsContainerPT> =
-    ({addMessage, state}) => {
+    ({
+         addMessage,
+         state,
+        isAuth
+     }) => {
         const {userId} = useParams()
 
 
         const dialogItems = useMemo(() => {
             return state.dialogsData.map(d => <DialogItem key={d.id} name={d.name} id={d.id}/>)
         }, [state])
+
         let dialogContent;
+
         if (userId) {
             dialogContent = state.dialogsData?.find(d => d.id === +userId)
         }
 
+        if (!isAuth) {
+            return <Navigate to={"/login"}/>
+        }
         return (
             <StyledDialogs>
                 <div>
@@ -34,12 +44,14 @@ const DialogsContainer: React.FC<DialogsContainerPT> =
     };
 type MapStateToPropsT = {
     state: DialogsStateT
+    isAuth:boolean
 }
 type MapDispatchToPropsT = {
     addMessage: (newMessageBody: string, dialogId: number) => void
 }
 const mapStateToProps = (state: AppStateType): MapStateToPropsT => ({
-    state: state.dialogsPage
+    state: state.dialogsPage,
+    isAuth:state.auth.isAuth
 })
 const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsT => ({
     addMessage: (newMessageBody: string, dialogId: number) => {

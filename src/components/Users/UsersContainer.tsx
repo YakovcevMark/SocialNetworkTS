@@ -11,6 +11,7 @@ import {connect} from "react-redux";
 import {compose, Dispatch} from "redux";
 import {AppStateType} from "../../redux/reduxStore";
 import {
+    getUsersRequest,
     makeFollow, makeUnFollow, setCurrentPage, setTotalUsersCount,
     setUsers,
     toggleFollowingInProgress, togglePreloader,
@@ -33,7 +34,7 @@ const UsersContainer: React.FC<UsersContainerPT> =
          makeUnFollow,
          makeFollow,
          followingInProgress,
-         // getUsersRequest,
+         getUsersRequest,
          pageSize,
          currentPage,
          setCurrentPage,
@@ -44,27 +45,24 @@ const UsersContainer: React.FC<UsersContainerPT> =
         setTotalUsersCount,
         togglePreloader
      }) => {
-        // useEffect(() => {
-        //     getUsersRequest(pageSize, currentPage);
-        //
-        // }, [currentPage, getUsersRequest, pageSize])
         useEffect(() => {
-            togglePreloader(true)
-           usersAPI.getUsersRequest(pageSize,currentPage)
-                .then(resp => {
-                    setUsers(resp.data.items)
-                    setTotalUsersCount(resp.data.totalCount)
-                    togglePreloader(false)
-                })
-        },[pageSize,currentPage,togglePreloader,setUsers,setTotalUsersCount])
+            getUsersRequest(pageSize, currentPage);
+        }, [currentPage, getUsersRequest, pageSize])
+        // useEffect(() => {
+        //     togglePreloader(true)
+        //    usersAPI.getUsersRequest(pageSize,currentPage)
+        //         .then(resp => {
+        //             setUsers(resp.data.items)
+        //             setTotalUsersCount(resp.data.totalCount)
+        //             togglePreloader(false)
+        //         })
+        // },[pageSize,currentPage,togglePreloader,setUsers,setTotalUsersCount])
 
         function onPageChanged(numberOfPage:number) {
             setCurrentPage(numberOfPage);
         }
 
-        // useLayoutEffect(() => {
-        //
-        // },[])
+
         return <>
             <Users
                 currentPage={currentPage}
@@ -97,6 +95,7 @@ type MapDispatchToPropsT =  {
     setCurrentPage:(p:number)=> void
     setTotalUsersCount:(count:number) => void
     togglePreloader:(v:boolean) => void
+    getUsersRequest:(p:number, c: number) => void
     // getUsersRequest:(p:number,c:number) => void
 }
 const mapStateToProps = (state: AppStateType): MapStateToPropsT => ({
@@ -107,18 +106,8 @@ const mapStateToProps = (state: AppStateType): MapStateToPropsT => ({
     totalUsersCount:state.usersPage.totalUsersCount,
     isFetching: state.usersPage.isFetching
 })
-// const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsT => ({
-//     makeFollow: (userId: number) => dispatch(follow(userId)),
-//     makeUnFollow: (userId: number) => dispatch(unFollow(userId)),
-//     toggleFollowingInProgress: (isFetching:boolean, userId:number) =>
-//          dispatch(toggleFollowingInProgress(isFetching,userId)),
-//     setUsers:(users: UserT[]) => dispatch(setUsers(users)),
-//     setCurrentPage:(p:number) => dispatch(setCurrentPage(p)),
-//     setTotalUsersCount:(c:number) => dispatch(setTotalUsersCount(c)),
-//     togglePreloader:(v:boolean)=>dispatch(togglePreloader(v))
-//     // getUsersRequest:(p:number,c:number) => dispatch(getUsersRequest(p,c))
-// })
+
 export default compose(
     connect(mapStateToProps,
-        {makeFollow,makeUnFollow,toggleFollowingInProgress,setUsers,setCurrentPage,setTotalUsersCount,togglePreloader })
+        {makeFollow,makeUnFollow,toggleFollowingInProgress,setUsers,getUsersRequest,setCurrentPage,setTotalUsersCount,togglePreloader })
 )(UsersContainer)
