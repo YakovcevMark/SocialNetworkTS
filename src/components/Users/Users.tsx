@@ -4,21 +4,24 @@
 // import Pagination from "../common/Pagination/Pagination";
 // import Preloader from "../common/Preloader/Preloader";
 // import {useDispatch, useSelector} from "react-redux";
-// import {AppStateType} from "../../redux/reduxStore";
+// import {RootState} from "../../redux/reduxStore";
+// import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 //
 // const Users: React.FC =
 //     () => {
-//         const users = useSelector<AppStateType,UserT[]>(state => state.usersPage.users)
-//         const currentPage = useSelector<AppStateType,number>(state => state.usersPage.currentPage)
-//         const pageSize = useSelector<AppStateType,number>(state => state.usersPage.pageSize)
-//         const totalUsersCount = useSelector<AppStateType,number>(state => state.usersPage.totalUsersCount)
-//         const isFetching = useSelector<AppStateType,boolean>(state => state.usersPage.isFetching)
-//         const dispatch = useDispatch()
+//         const users = useAppSelector(state => state.usersPage.users)
+//         const currentPage = useAppSelector(state => state.usersPage.currentPage)
+//         const pageSize = useAppSelector(state => state.usersPage.pageSize)
+//         const totalUsersCount = useAppSelector(state => state.usersPage.totalUsersCount)
+//         const isFetching = useAppSelector(state => state.usersPage.isFetching)
+//         const dispatch = useAppDispatch()
 //
 //         useLayoutEffect(() => {
 //             dispatch(getUsersRequest(pageSize,currentPage))
 //         },[dispatch, pageSize,currentPage ])
-//
+//         const pageChanger = (page:number) => {
+//             dispatch(setCurrentPage(page))
+//         }
 //         const renderedUsers = useMemo(() => {
 //             return users.map((u: UserT) => <User key={u.id}
 //                                                  id={u.id}
@@ -33,7 +36,7 @@
 //                     totalItemsCount={totalUsersCount}
 //                     pageSize={pageSize}
 //                     currentPage={currentPage}
-//                     pageChanged={dispatch(setCurrentPage)}
+//                     pageChanged={pageChanger}
 //                 />
 //                 {}
 //                 {isFetching ? <Preloader/> : renderedUsers}

@@ -2,7 +2,8 @@ import React from 'react';
 import user from "../../../../assets/img/user.png"
 import styled from "styled-components";
 import Contact from "./Contact/Contact";
-import {ProfileInfoT} from "../../../../redux/profilePageReducer";
+import {useAppSelector} from "../../../../redux/hooks";
+import {ProfileStatus} from "./ProfileStatus/ProfileStatus";
 
 const StyledProfileInfo = styled.div`
   display: grid;
@@ -17,17 +18,17 @@ const StyledProfileInfo = styled.div`
   margin: 5px;
 `
 type ProfileInfoPT = {
-    profileInfo: ProfileInfoT
+    updateProfileStatusRequest:(s: string) => void
 }
 const ProfileInfo: React.FC<ProfileInfoPT> =
-    ({
-         profileInfo
-     }) => {
-        let profilePhoto = user && profileInfo.photos.large
-
+    ({updateProfileStatusRequest}) => {
+        const profileInfo = useAppSelector(state => state.profilePage.profileInfo)
+        const sessionUserId = useAppSelector(state => state.auth.data.id)
+        const profilePhoto = user && profileInfo.photos.large
+        const isOwner =  sessionUserId === profileInfo.userId
         return (
             <StyledProfileInfo>
-                <img src={profilePhoto} alt="Profile photo"/>
+                <img src={profilePhoto} alt="Profile"/>
                 <div>
                     {/*<div>*/}
                     {/*    {isOwner && <input type="file" onChange={onSavePhoto}/>}*/}
@@ -37,11 +38,10 @@ const ProfileInfo: React.FC<ProfileInfoPT> =
                     </div>
                     <div>
                         <b>Status:</b>
-                        {/*<ProfileStatus*/}
-                        {/*    isOwner={isOwner}*/}
-                        {/*    status={status}*/}
-                        {/*    updateProfileStatusRequest={updateProfileStatusRequest}*/}
-                        {/*/>*/}
+                        <ProfileStatus
+                            isOwner={isOwner}
+                            updateProfileStatusRequest={updateProfileStatusRequest}
+                        />
                     </div>
                     <div>
                         <div><b>aboutMe:</b></div>

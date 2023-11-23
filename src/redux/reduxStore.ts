@@ -1,4 +1,4 @@
-import {applyMiddleware, combineReducers, compose, legacy_createStore as createStore} from "redux";
+import {applyMiddleware, combineReducers, legacy_createStore as createStore} from "redux";
 import {profilePageReducer} from "./profilePageReducer";
 import {dialogsPageReducer} from "./dialogsPageReducer";
 // import sidebarPageReducer from "./sidebarPageReducer";
@@ -21,7 +21,8 @@ const rootReducer = combineReducers({
 
 // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // let store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
-export type AppStateType = ReturnType<typeof rootReducer>
 export const store = createStore(rootReducer,applyMiddleware(thunk))
+export type RootState = ReturnType<typeof rootReducer>
+export type AppDispatch = typeof store.dispatch
 // @ts-ignore
 window.store = store //for dev

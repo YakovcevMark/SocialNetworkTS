@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useMemo, useState} from 'react';
 import Post from "./Post/Post";
 import styled from "styled-components";
-import {PostT} from "../../../redux/profilePageReducer";
+import {useAppSelector} from "../../../redux/hooks";
 
 const StyledMyPosts = styled.div`
   padding: 5px;
@@ -12,10 +12,10 @@ const StyledMyPosts = styled.div`
   }
 `
 type MyPostsPT = {
-    postsData:PostT[]
     addNewPost?:(postBody:string) => void
 }
-const MyPosts: React.FC<MyPostsPT> = ({postsData,addNewPost}) => {
+const MyPosts: React.FC<MyPostsPT> = ({addNewPost}) => {
+    const postsData = useAppSelector(state => state.profilePage.postsData)
     const posts = useMemo(() => {
         return postsData?.map(p => <Post key={p.id}
                                      postBody={p.postBody}

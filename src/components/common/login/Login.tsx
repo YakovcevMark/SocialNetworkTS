@@ -1,37 +1,42 @@
-// import {login} from "../../../redux/authReducer";
 import React from "react";
 import {compose} from "redux";
-// import withRouter from "../../Hocs/WithRouterComponent/WithRouterFunction";
 import {connect} from "react-redux";
-import {AppStateType} from "../../../redux/reduxStore";
+import {RootState} from "../../../redux/reduxStore";
 import {Navigate} from "react-router-dom";
+import LoginForm from "../FormControls/LoginForm";
+import {AuthUserDataT, loginRequest} from "../../../redux/authReducer";
+import {FormikErrors, FormikValues} from "formik";
 
-const Login: React.FC<MapDispatchToPropsT> =
+const Login: React.FC<MapStateToPropsT & MDTPT> =
     ({
          isAuth,
-         // login,
-         // captchaURL
+         loginRequest,
+         captchaURL
      }) => {
         if (isAuth) return <Navigate to={"/profile"}/>
         return <>
             <h1>LOGIN</h1>
-            {/*<LoginForm onSubmit={login}*/}
-            {/*           captchaURL={captchaURL}*/}
-            {/*           />*/}
+            <LoginForm onSubmit={loginRequest}
+                       captchaURL={captchaURL}
+            />
         </>
     }
-type MapDispatchToPropsT = {
+type MapStateToPropsT = {
     isAuth: boolean
     captchaURL: string
 }
-const mapStateToProps = (state: AppStateType): MapDispatchToPropsT => {
+type MDTPT = {
+    loginRequest: (data: FormikValues, setErrors: (errors: FormikErrors<FormikValues>) => void) => void
+}
+const mapStateToProps = (state: RootState): MapStateToPropsT => {
     return {
         isAuth: state.auth.isAuth,
         captchaURL: state.auth.captchaURL,
     }
 }
+
 export default compose(
     connect(mapStateToProps,
-        // {login}
+        {loginRequest}
     )
 )(Login);

@@ -1,20 +1,21 @@
 import React, {memo, useEffect} from 'react';
 import {connect} from "react-redux";
 import Header from "./Header";
-import {getAuthUserData} from "../../redux/authReducer";
-import {AppStateType} from "../../redux/reduxStore";
+import {getAuthUserData, logoutRequest} from "../../redux/authReducer";
+import {RootState} from "../../redux/reduxStore";
 
 const HeaderContainer: React.FC<HeaderContainerPT> =
     ({
          isAuth,
          login,
-         getAuthUserData
+         getAuthUserData,
+         logoutRequest
      }) => {
         useEffect(() => {
             getAuthUserData()
         }, [getAuthUserData])
         return (
-            <Header isAuth={isAuth} login={login}/>
+            <Header isAuth={isAuth} login={login} logoutRequest={logoutRequest}/>
         );
     };
 type HeaderContainerPT = HeaderContainerT & {}
@@ -25,9 +26,10 @@ type MapStateToPropsT = {
 }
 type MapDispatchToPropsT = {
     getAuthUserData: () => void
+    logoutRequest:() => void
 }
-const mapStateToProps = (state: AppStateType): MapStateToPropsT => ({
+const mapStateToProps = (state: RootState): MapStateToPropsT => ({
     isAuth: state.auth.isAuth,
     login: state.auth.data.login
 })
-export default memo(connect(mapStateToProps, {getAuthUserData})(HeaderContainer));
+export default memo(connect(mapStateToProps, {getAuthUserData,logoutRequest})(HeaderContainer));

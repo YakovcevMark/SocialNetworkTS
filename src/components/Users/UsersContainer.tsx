@@ -9,7 +9,7 @@ import Users from "./Users";
 import React, {useEffect, useLayoutEffect} from "react"
 import {connect} from "react-redux";
 import {compose, Dispatch} from "redux";
-import {AppStateType} from "../../redux/reduxStore";
+import {RootState} from "../../redux/reduxStore";
 import {
     getUsersRequest,
     makeFollow, makeUnFollow, setCurrentPage, setTotalUsersCount,
@@ -98,7 +98,7 @@ type MapDispatchToPropsT =  {
     getUsersRequest:(p:number, c: number) => void
     // getUsersRequest:(p:number,c:number) => void
 }
-const mapStateToProps = (state: AppStateType): MapStateToPropsT => ({
+const mapStateToProps = (state: RootState): MapStateToPropsT => ({
     users: state.usersPage.users,
     followingInProgress: state.usersPage.followingInProgress,
     pageSize: state.usersPage.pageSize,

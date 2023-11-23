@@ -1,6 +1,7 @@
 import axios from "axios";
 import {AuthUserDataT} from "../redux/authReducer";
 import {ProfileInfoT} from "../redux/profilePageReducer";
+import {FormikValues} from "formik";
 
 const instance = axios.create({
     baseURL: "https://social-network.samuraijs.com/api/1.0/",
@@ -24,7 +25,7 @@ export const authAPI = {
     authorization() {
         return instance.get(`auth/me`);
     },
-    login(data:AuthUserDataT) {
+    login(data:FormikValues) {
         return instance.post(`auth/login`, {...data});
     },
     logout() {

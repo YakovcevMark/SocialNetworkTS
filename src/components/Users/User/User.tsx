@@ -4,7 +4,8 @@
 // import userPNG from "../../../assets/img/user.png"
 // import {makeFollow, makeUnFollow, UserT} from "../../../redux/usersPageReducer";
 // import {useDispatch, useSelector} from "react-redux";
-// import {AppStateType} from "../../../redux/reduxStore";
+// import {RootState} from "../../../redux/reduxStore";
+// import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
 //
 // type UserPT = UserT
 //
@@ -16,8 +17,8 @@
 //          photos,
 //          followed,
 //      }) => {
-//         const followingInProgress = useSelector<AppStateType, number[]>(state => state.usersPage.followingInProgress)
-//         const dispatch = useDispatch()
+//         const followingInProgress = useAppSelector(state => state.usersPage.followingInProgress)
+//         const dispatch = useAppDispatch()
 //         const onMakeFollow = () => {
 //             dispatch(makeFollow(id))
 //         }

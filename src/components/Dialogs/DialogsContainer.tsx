@@ -1,13 +1,13 @@
-import React, {useMemo} from 'react';
+import React, {ComponentType, useMemo} from 'react';
 import styled from "styled-components";
 import DialogItem from "./Dialog/DialogItem";
 import DialogContent from "./Dialog/DialogContent";
 import {useParams} from "react-router";
 import {addMessage, DialogsStateT} from "../../redux/dialogsPageReducer";
-import {AppStateType} from "../../redux/reduxStore";
+import {RootState} from "../../redux/reduxStore";
 import {connect} from "react-redux";
-import {Dispatch} from "redux";
-import {Navigate} from "react-router-dom";
+import {compose, Dispatch} from "redux";
+import {withAuthRedirect} from "../common/Hocs/withAuthRedirect";
 
 type DialogsContainerPT = MapStateToPropsT & MapDispatchToPropsT
 
@@ -15,7 +15,6 @@ const DialogsContainer: React.FC<DialogsContainerPT> =
     ({
          addMessage,
          state,
-        isAuth
      }) => {
         const {userId} = useParams()
 
@@ -30,9 +29,7 @@ const DialogsContainer: React.FC<DialogsContainerPT> =
             dialogContent = state.dialogsData?.find(d => d.id === +userId)
         }
 
-        if (!isAuth) {
-            return <Navigate to={"/login"}/>
-        }
+
         return (
             <StyledDialogs>
                 <div>
@@ -44,21 +41,23 @@ const DialogsContainer: React.FC<DialogsContainerPT> =
     };
 type MapStateToPropsT = {
     state: DialogsStateT
-    isAuth:boolean
+
 }
 type MapDispatchToPropsT = {
     addMessage: (newMessageBody: string, dialogId: number) => void
 }
-const mapStateToProps = (state: AppStateType): MapStateToPropsT => ({
-    state: state.dialogsPage,
-    isAuth:state.auth.isAuth
+const mapStateToProps = (state: RootState): MapStateToPropsT => ({
+    state: state.dialogsPage
 })
 const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsT => ({
     addMessage: (newMessageBody: string, dialogId: number) => {
         dispatch(addMessage(newMessageBody, dialogId))
     }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(DialogsContainer);
+export default compose<ComponentType>(
+    withAuthRedirect,
+    connect(mapStateToProps, mapDispatchToProps)
+)(DialogsContainer);
 const StyledDialogs = styled.div`
   display: grid;
   grid-template-columns: 2fr 10fr;

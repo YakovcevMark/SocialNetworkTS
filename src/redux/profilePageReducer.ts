@@ -105,14 +105,18 @@ export const setProfilePhoto = (photos: PhotosT) => (
 )
 export const getProfileInfoRequest = (userId: number) => async (dispatch: Dispatch) => {
     dispatch(togglePreloader(true));
-    const resp = await profileAPI.getProfile(userId)
-    dispatch(setProfileInfo(resp.data));
+    const mainInfo = await profileAPI.getProfile(userId)
+    dispatch(setProfileInfo(mainInfo.data));
+    const status = await profileAPI.getStatus(userId)
+    dispatch(setProfileStatus(status.data));
     dispatch(togglePreloader(false));
 };
-export const getProfileStatusRequest = (userId: number) => async (dispatch: Dispatch) => {
-    const resp = await profileAPI.getStatus(userId)
-    dispatch(setProfileStatus(resp.data));
-};
+// export const getProfileStatusRequest = (userId: number) => async (dispatch: Dispatch) => {
+//     dispatch(togglePreloader(true));
+//     const status = await profileAPI.getStatus(userId)
+//     dispatch(setProfileStatus(status.data));
+//     dispatch(togglePreloader(false));
+// };
 export const updateProfileStatusRequest = (status:string) => async (dispatch: Dispatch) => {
     await profileAPI.updateStatus(status)
     dispatch(setProfileStatus(status));
