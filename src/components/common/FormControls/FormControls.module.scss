@@ -1,0 +1,41 @@
+@mixin myTextArea() {
+  textarea {
+    width: 100%;
+    height: 85%;
+  }
+}
+
+.formControl {
+  &.error {
+    input,
+    textarea {
+      border: solid red 2px;
+    }
+
+    span {
+      //position: absolute;
+      color: red;
+    }
+  }
+
+  &.apiErrors {
+    span {
+      border: solid red 3px;
+      color: red;
+      font-weight: bold;
+    }
+  }
+}
+
+.newMessage {
+  display: grid;
+  grid-template-columns: 10fr 2fr;
+  @include myTextArea()
+}
+
+.newPost {
+  display: grid;
+  width: 500px;
+  grid-template-columns: 3fr 2fr;
+  @include myTextArea()
+}

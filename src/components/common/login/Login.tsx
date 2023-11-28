@@ -26,7 +26,7 @@ type MapStateToPropsT = {
     captchaURL: string
 }
 type MDTPT = {
-    loginRequest: (data: FormikValues, setErrors: (errors: FormikErrors<FormikValues>) => void) => void
+    loginRequest: (data: FormikValues, setStatus: (status:string) => void) => void
 }
 const mapStateToProps = (state: RootState): MapStateToPropsT => {
     return {

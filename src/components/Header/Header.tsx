@@ -23,7 +23,7 @@ const Header: React.FC<HeaderPT> =
                 {isAuth
                     ? (<div>
                         <div className="userInfo">{login}</div>
-                        <div onClick={logOutHandler}>logout</div>
+                        <button onClick={logOutHandler}>logout</button>
                     </div>)
                     : <NavLink to={'login'}>login</NavLink>}
             </StyledHeader>

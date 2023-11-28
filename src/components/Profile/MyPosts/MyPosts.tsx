@@ -2,6 +2,7 @@ import React, {ChangeEvent, useMemo, useState} from 'react';
 import Post from "./Post/Post";
 import styled from "styled-components";
 import {useAppSelector} from "../../../redux/hooks";
+import {AddNewPostForm} from "../../common/FormControls/AddNewPostForm";
 
 const StyledMyPosts = styled.div`
   padding: 5px;
@@ -9,7 +10,6 @@ const StyledMyPosts = styled.div`
     display: grid;
     width: 500px;
     grid-template-columns: 3fr 2fr;
-  }
 `
 type MyPostsPT = {
     addNewPost?:(postBody:string) => void
@@ -24,21 +24,14 @@ const MyPosts: React.FC<MyPostsPT> = ({addNewPost}) => {
                                      id={p.id}
         />)
     }, [postsData])
-    const [title,setTitle] = useState<string>("")
-    const addNewPostHandler = () => {
-        addNewPost && title.trim() && addNewPost(title)
-        setTitle("");
-    }
-    const onChangeHandler = (e:ChangeEvent<HTMLTextAreaElement>) => {
-        setTitle(e.currentTarget.value)
+    const addNewPostHandler = (postBody:string) => {
+        addNewPost && postBody.trim() && addNewPost(postBody)
     }
     return (
         <StyledMyPosts>
+
             <h3>My Posts</h3>
-            <div className='newPost'>
-                <textarea value={title} onChange={onChangeHandler}></textarea>
-                <button onClick={addNewPostHandler}>Add new post</button>
-            </div>
+            <AddNewPostForm onSubmit={addNewPostHandler}/>
             {posts}
         </StyledMyPosts>
     );

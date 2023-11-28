@@ -2,13 +2,28 @@ import axios from "axios";
 import {AuthUserDataT} from "../redux/authReducer";
 import {ProfileInfoT} from "../redux/profilePageReducer";
 import {FormikValues} from "formik";
+export type SessionUserType = {
+    id:number
+    email:string
+    login:string
+}
+export type ProfileType = {
 
-const instance = axios.create({
-    baseURL: "https://social-network.samuraijs.com/api/1.0/",
+}
+type ResponseType<T> = {
+    data:T
+    resultCode:number
+    messages:string[]
+}
+const settings = {
     withCredentials: true,
     headers: {
-        "API-KEY": "8d09abf8-2a50-4564-8e2f-d00a6cf398df"
+        'API-KEY': '8d09abf8-2a50-4564-8e2f-d00a6cf398df'
     }
+}
+const instance = axios.create({
+    baseURL: "https://social-network.samuraijs.com/api/1.0/",
+   ...settings
 })
 export const usersAPI = {
     getUsersRequest(pageSize:number, currentPage:number) {

@@ -1,13 +1,16 @@
 import {Field, Form, Formik} from "formik";
-import classes from "./FormControls.module.css"
+import s from "./FormControls.module.scss"
 import React from "react";
-function validatePostText(value){
+type AddNewPostFormT= {
+    onSubmit: (newPostBody: string) => void
+}
+function validatePostText(value:string){
     let error;
     if(value.length > 30) error = "Max length is 30 symbols";
     return error;
 
 }
-export const AddNewPostForm = ({onSubmit}) => {
+export const AddNewPostForm:React.FC<AddNewPostFormT> = ({onSubmit}) => {
     return (
         <Formik
             initialValues={{newPostBody: ""}}
@@ -28,10 +31,10 @@ export const AddNewPostForm = ({onSubmit}) => {
                   isSubmitting,
 
               }) => (
-                <Form>
-                    <div className={classes.formControl + " "
+                <Form className={s.newPost}>
+                    <div className={s.formControl + " "
                         + (touched.newPostBody && errors.newPostBody ?
-                            classes.error : "")}>
+                            s.error : "")}>
                         <Field
                             name="newPostBody"
                             component="textarea"
@@ -42,7 +45,7 @@ export const AddNewPostForm = ({onSubmit}) => {
 
                         <div>
                             {touched.newPostBody && errors.newPostBody &&
-                                <span>{errors.newPostBody}</span>}
+                                <span>{errors.newPostBody.toString()}</span>}
                         </div>
                     </div>
                     <button type="submit">

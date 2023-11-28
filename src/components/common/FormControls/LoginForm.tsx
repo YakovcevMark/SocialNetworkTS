@@ -1,9 +1,9 @@
-import {Field, Form, Formik, FormikErrors, FormikValues} from "formik";
+import {Field, Form, Formik, FormikValues} from "formik";
 import React from "react";
-import classes from "./FormControls.module.css";
+import s from "./FormControls.module.scss";
 
 
-function validateEmail(value:string) {
+function validateEmail(value: string) {
     let error;
     if (!value) error = 'Required'
     if (value.length > 50) error = 'Your email should be less 50 symbols'
@@ -11,23 +11,24 @@ function validateEmail(value:string) {
     return error;
 }
 
-function validatePassword(value:string) {
+function validatePassword(value: string) {
     let error;
     if (!value) error = 'Required'
     if (value.length > 20) error = 'Your password should be less 20 symbols'
     if (value.length < 8) error = 'Your password should be more then 7 symbols'
     return error;
 }
-type LoginFormPT ={
-    onSubmit:(values:FormikValues,setErrors:(errors: FormikErrors<FormikValues>) => void) => void
-    captchaURL:string
+
+type LoginFormPT = {
+    onSubmit: (values: FormikValues, setStatus: (status: string) => void) => void
+    captchaURL: string
 }
-const LoginForm:React.FC<LoginFormPT> = ({onSubmit, captchaURL}) => {
+const LoginForm: React.FC<LoginFormPT> = ({onSubmit, captchaURL}) => {
     return (
         <Formik
             initialValues={{email: '', password: '', rememberMe: false, captcha: null}}
             onSubmit={(values,
-                       {setSubmitting, setErrors}) => onSubmit(values, setErrors)
+                       {setSubmitting, setStatus}) => onSubmit(values, setStatus)
             }
         >
             {({
@@ -38,12 +39,13 @@ const LoginForm:React.FC<LoginFormPT> = ({onSubmit, captchaURL}) => {
                   handleBlur,
                   handleSubmit,
                   isSubmitting,
+                  status
 
               }) => (
                 <Form>
-                    <div className={classes.formControl + " "
+                    <div className={s.formControl + " "
                         + (touched.email && errors.email ?
-                            classes.error : "")}>
+                            s.error : "")}>
                         <Field
                             type="login"
                             name="email"
@@ -57,9 +59,9 @@ const LoginForm:React.FC<LoginFormPT> = ({onSubmit, captchaURL}) => {
                                 <span>{errors.email}</span>}
                         </div>
                     </div>
-                    <div className={classes.formControl + " "
+                    <div className={s.formControl + " "
                         + (touched.password && errors.password ?
-                            classes.error : "")}>
+                            s.error : "")}>
                         <Field
                             type="password"
                             name="password"
@@ -81,10 +83,10 @@ const LoginForm:React.FC<LoginFormPT> = ({onSubmit, captchaURL}) => {
                         />
                         remember me?
                     </div>
-                    {/*<div className={classes.apiErrors + " " + classes.formControl}>*/}
-                    {/*    {errors.apiError &&*/}
-                    {/*        <span>{errors.apiError}</span>}*/}
-                    {/*</div>*/}
+                    <div className={s.apiErrors + " " + s.formControl}>
+                        {!!status &&
+                            <span>{status}</span>}
+                    </div>
                     <div>
                         {captchaURL && <img src={captchaURL} alt=""/>}
                         {captchaURL && <div>

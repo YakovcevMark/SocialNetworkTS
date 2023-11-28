@@ -39,7 +39,7 @@ export const getAuthUserData = () => async (dispatch: Dispatch) => {
         dispatch(setAuthUserData({...resp.data.data}));
     }
 }
-export const loginRequest = (data: FormikValues, setErrors: (errors: FormikErrors<FormikValues>) => void) => async (dispatch: Dispatch) => {
+export const loginRequest = (data: FormikValues, setStatus: (status:string) => void) => async (dispatch: Dispatch) => {
     const resp = await authAPI.login({...data});
     if (resp.data.resultCode !== 0) {
         if (resp.data.resultCode === 10) {
@@ -47,7 +47,7 @@ export const loginRequest = (data: FormikValues, setErrors: (errors: FormikError
             dispatch(setCaptchaUrl(respWithCaptcha.data.url))
         }
         // setErrors({[apiError]: resp.data.messages[0]});
-        setErrors({"apiError": resp.data.messages[0]});
+        setStatus( resp.data.messages[0]);
     } else {
         const resp = await authAPI.authorization();
         if (resp.data.resultCode === 0) {
