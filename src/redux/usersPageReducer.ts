@@ -1,17 +1,9 @@
-import {usersAPI} from "../api/samuraiAPI";
+import {usersAPI, UserT} from "../api/samuraiAPI";
 import {updateObjectInArray} from "../utils/reducer-helpers"
-import {Dispatch} from "redux";
+import {AppThunk} from "./reduxStore";
+import {AxiosResponse} from "axios"
 
-export type UserT = {
-    id: number
-    name: string
-    status: string
-    photos: {
-        small: string
-        large: string
-    }
-    followed: boolean
-}
+
 
 const usersPage = {
     users: [
@@ -33,7 +25,7 @@ const usersPage = {
     followingInProgress: [] as number[],
 }
 type UsersStateT = typeof usersPage
-const usersPageReducer = (state: UsersStateT = usersPage, action: ActionsType): UsersStateT => {
+const usersPageReducer = (state: UsersStateT = usersPage, action: UsersActionsType): UsersStateT => {
     switch (action.type) {
         case "FOLLOW":
             return {
@@ -84,7 +76,7 @@ const usersPageReducer = (state: UsersStateT = usersPage, action: ActionsType): 
             return state;
     }
 }
-type ActionsType =
+export type UsersActionsType =
     ReturnType<typeof follow> | ReturnType<typeof unFollow> |
     ReturnType<typeof setUsers> | ReturnType<typeof setTotalUsersCount> |
     ReturnType<typeof setCurrentPage> | ReturnType<typeof togglePreloader> |
@@ -107,39 +99,25 @@ export const toggleFollowingInProgress = (isFetching: boolean, userId: number) =
         isFetching,
         userId
     } as const);
-// type FollowUnFollowFlowActionsT = typeof follow | typeof unFollow
-// const followUnfollowFlow = async (userId:number, apiMethod, action:FollowUnFollowFlowActionsT, dispatch: Dispatch) => {
-//     const resp = await apiMethod(userId)
-//     if (resp.data.resultCode === 0)
-//         dispatch(action(userId));
-//     dispatch(toggleFollowingInProgress(false, userId));
-// }
-export const getUsersRequest = (pageSize: number, currentPage: number) => async (dispatch: Dispatch) => {
-    dispatch(togglePreloader(true));
-    const resp = await usersAPI.getUsersRequest(pageSize, currentPage)
-    dispatch(togglePreloader(false));
-    dispatch(setUsers(resp.data.items));
-    dispatch(setTotalUsersCount(resp.data.totalCount));
-}
-export const makeFollow = (userId: number) => async (dispatch: Dispatch) => {
-    dispatch(toggleFollowingInProgress(true, userId));
-    const resp = await usersAPI.makeFollow(userId)
-    if (resp.data.resultCode === 0) {
-        dispatch(follow(userId));
+const followUnfollowFlow = (userId: number, apiMethod:(userId: number) => Promise<AxiosResponse<any>>, action: typeof follow | typeof unFollow): AppThunk =>
+    async (dispatch) => {
+        dispatch(toggleFollowingInProgress(true, userId));
+        const resp = await apiMethod(userId)
+        if (resp.data.resultCode === 0)
+            dispatch(action(userId));
         dispatch(toggleFollowingInProgress(false, userId));
     }
+export const getUsersRequest = (pageSize: number, currentPage: number): AppThunk =>
+    async (dispatch) => {
+        dispatch(togglePreloader(true));
+        const resp = await usersAPI.getUsersRequest(pageSize, currentPage)
+        dispatch(togglePreloader(false));
+        dispatch(setUsers(resp.data.items));
+        dispatch(setTotalUsersCount(resp.data.totalCount));
+    }
+export const makeFollow = (userId: number) => followUnfollowFlow(userId, usersAPI.makeFollow.bind(usersAPI), follow)
 
-    // await followUnfollowFlow(userId, usersAPI.makeFollow.bind(usersAPI), follow, dispatch)
-}
-export const makeUnFollow = (userId: number) => async (dispatch: Dispatch) => {
-    dispatch(toggleFollowingInProgress(true, userId));
-    const resp = await usersAPI.makeUnFollow(userId)
-    if (resp.data.resultCode === 0) {
-        dispatch(unFollow(userId));
-        dispatch(toggleFollowingInProgress(false, userId));
-    }
-    // await followUnfollowFlow(userId, usersAPI.makeUnFollow.bind(usersAPI), unFollow, dispatch)
-}
+export const makeUnFollow = (userId: number) => followUnfollowFlow(userId, usersAPI.makeUnFollow.bind(usersAPI), unFollow)
 
 
 export default usersPageReducer;

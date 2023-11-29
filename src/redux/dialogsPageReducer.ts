@@ -69,8 +69,8 @@ const dialogsPage: DialogsStateT = {
 };
 
 // type AddMessageAT = ReturnType<typeof addMessage>
-type ActionsTypes = ReturnType<typeof addMessage>
-export const dialogsPageReducer = (state: DialogsStateT = dialogsPage, action: ActionsTypes):DialogsStateT => {
+export type DialogsActionsTypes = ReturnType<typeof addMessage>
+export const dialogsPageReducer = (state: DialogsStateT = dialogsPage, action: DialogsActionsTypes):DialogsStateT => {
     switch (action.type) {
         case "ADD_MESSAGE":
             const newMessage: MessageT = {

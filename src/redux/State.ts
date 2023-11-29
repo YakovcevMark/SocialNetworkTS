@@ -1,9 +1,6 @@
-// import profilePageReducer from "./profile_page_reducer";
-// import dialogsPageReducer from "./dialogs_page_reducer";
-// import sidebarPageReducer from "./sidebar_page_reducer";
-import {v1} from "uuid";
 import {DialogsStateT} from "./dialogsPageReducer";
-import {ProfileInfoT, ProfileStateT} from "./profilePageReducer";
+import {ProfileStateT} from "./profilePageReducer";
+import {ProfileType} from "../api/samuraiAPI";
 
 
 type StateT = {
@@ -78,7 +75,7 @@ export let store: StoreT = {
                 {id: 0, postBody: "Hi! I love you", likesCount: 15, dislikesCount: 0},
                 {id: 1, postBody: "i really hate u!!!!!!!!!!!", likesCount: 20, dislikesCount: 0},
             ],
-            profileInfo: {}as ProfileInfoT,
+            profileInfo: {}as ProfileType,
             isFetching: false,
             status: ""
         }

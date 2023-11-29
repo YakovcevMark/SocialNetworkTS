@@ -11,9 +11,9 @@ import {
 import styled from "styled-components";
 import {Provider} from "react-redux";
 import {store} from "./redux/reduxStore";
-import UsersContainer from "./components/Users/UsersContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/common/login/Login";
+import Users from "./components/Users/Users";
 
 const App: React.FC = () => {
     return (
@@ -32,7 +32,7 @@ const App: React.FC = () => {
                                 <Route path={""} element={<DialogsContainer/>}/>
                                 <Route path={":userId"} element={<DialogsContainer/>} />
                             </Route>
-                            <Route path={"/users"} element={<UsersContainer/>}/>
+                            <Route path={"/users"} element={<Users/>}/>
                             <Route path={"/login"} element={<Login/>}/>
                         </Routes>
                     </div>
