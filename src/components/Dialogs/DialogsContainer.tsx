@@ -1,23 +1,17 @@
-import React, {ComponentType, useMemo} from 'react';
+import React, {ComponentType, memo, useMemo} from 'react';
 import styled from "styled-components";
 import DialogItem from "./Dialog/DialogItem";
 import DialogContent from "./Dialog/DialogContent";
 import {useParams} from "react-router";
-import {addMessage, DialogsStateT} from "../../redux/dialogsPageReducer";
-import {RootState} from "../../redux/reduxStore";
-import {connect} from "react-redux";
-import {compose, Dispatch} from "redux";
+import {compose} from "redux";
 import {withAuthRedirect} from "../common/Hocs/withAuthRedirect";
+import {useAppSelector} from "../../redux/hooks";
 
-type DialogsContainerPT = MapStateToPropsT & MapDispatchToPropsT
 
-const DialogsContainer: React.FC<DialogsContainerPT> =
-    ({
-         addMessage,
-         state,
-     }) => {
+const DialogsContainer: React.FC =
+    () => {
         const {userId} = useParams()
-
+        const state = useAppSelector(state => state.dialogsPage)
 
         const dialogItems = useMemo(() => {
             return state.dialogsData.map(d => <DialogItem key={d.id} name={d.name} id={d.id}/>)
@@ -35,28 +29,15 @@ const DialogsContainer: React.FC<DialogsContainerPT> =
                 <div>
                     {dialogItems}
                 </div>
-                {dialogContent && <DialogContent addMessage={addMessage} dialog={dialogContent}/>}
+                {dialogContent && <DialogContent dialog={dialogContent}/>}
             </StyledDialogs>
         );
     };
-type MapStateToPropsT = {
-    state: DialogsStateT
 
-}
-type MapDispatchToPropsT = {
-    addMessage: (newMessageBody: string, dialogId: number) => void
-}
-const mapStateToProps = (state: RootState): MapStateToPropsT => ({
-    state: state.dialogsPage
-})
-const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsT => ({
-    addMessage: (newMessageBody: string, dialogId: number) => {
-        dispatch(addMessage(newMessageBody, dialogId))
-    }
-})
+
 export default compose<ComponentType>(
     withAuthRedirect,
-    connect(mapStateToProps, mapDispatchToProps)
+    memo,
 )(DialogsContainer);
 const StyledDialogs = styled.div`
   display: grid;

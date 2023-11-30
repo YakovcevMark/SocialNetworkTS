@@ -1,18 +1,17 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 import styled from "styled-components";
-import {DialogT} from "../../../redux/dialogsPageReducer";
+import {addMessage, DialogT} from "../../../redux/dialogsPageReducer";
 import {AddNewMessageForm} from "../../common/FormControls/AddNewMessageForm";
+import {useAppDispatch} from "../../../redux/hooks";
 
 type DialogContentPT = {
     dialog: DialogT
-    addMessage: (newMessageBody:string, dialogId:number) => void
 }
 const DialogContent: React.FC<DialogContentPT> =
     ({
          dialog,
-         addMessage
      }) => {
-
+        const dispatch = useAppDispatch()
         const renderMessages = useMemo(() => {
             return dialog.messages.map(m => <div
                 key={m.id}
@@ -22,9 +21,8 @@ const DialogContent: React.FC<DialogContentPT> =
         }, [dialog])
 
         const onAddMessage = (newMessageBody:string) => {
-            addMessage &&
             newMessageBody.trim() &&
-            addMessage(newMessageBody,dialog.id)
+            dispatch(addMessage(newMessageBody,dialog.id))
         }
         return (
             <>

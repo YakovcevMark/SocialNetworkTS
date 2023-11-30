@@ -1,4 +1,4 @@
-import {usersAPI, UserT} from "../api/samuraiAPI";
+import {ResultCodes, usersAPI, UserT, ResponseType} from "../api/samuraiAPI";
 import {updateObjectInArray} from "../utils/reducer-helpers"
 import {AppThunk} from "./reduxStore";
 import {AxiosResponse} from "axios"
@@ -99,21 +99,21 @@ export const toggleFollowingInProgress = (isFetching: boolean, userId: number) =
         isFetching,
         userId
     } as const);
-const followUnfollowFlow = (userId: number, apiMethod:(userId: number) => Promise<AxiosResponse<any>>, action: typeof follow | typeof unFollow): AppThunk =>
+const followUnfollowFlow = (userId: number, apiMethod:(userId: number) => Promise<AxiosResponse<ResponseType>>, action: typeof follow | typeof unFollow): AppThunk =>
     async (dispatch) => {
         dispatch(toggleFollowingInProgress(true, userId));
-        const resp = await apiMethod(userId)
-        if (resp.data.resultCode === 0)
+        const data = await apiMethod(userId)
+        if (data.data.resultCode === ResultCodes.Success)
             dispatch(action(userId));
         dispatch(toggleFollowingInProgress(false, userId));
     }
 export const getUsersRequest = (pageSize: number, currentPage: number): AppThunk =>
     async (dispatch) => {
         dispatch(togglePreloader(true));
-        const resp = await usersAPI.getUsersRequest(pageSize, currentPage)
+        const usersData = await usersAPI.getUsersRequest(pageSize, currentPage)
         dispatch(togglePreloader(false));
-        dispatch(setUsers(resp.data.items));
-        dispatch(setTotalUsersCount(resp.data.totalCount));
+        dispatch(setUsers(usersData.items));
+        dispatch(setTotalUsersCount(usersData.totalCount));
     }
 export const makeFollow = (userId: number) => followUnfollowFlow(userId, usersAPI.makeFollow.bind(usersAPI), follow)
 

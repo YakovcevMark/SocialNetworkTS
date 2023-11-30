@@ -93,8 +93,8 @@ export const getProfileInfoRequest = (userId: number): AppThunk =>
         ])
         // const profileInfo =  await profileAPI.getProfile(userId)
         // dispatch(setProfileInfo(profileInfo.data));
-        dispatch(setProfileInfo(res[0].data));
-        dispatch(setProfileStatus(res[1].data));
+        dispatch(setProfileInfo(res[0]));
+        dispatch(setProfileStatus(res[1]));
         dispatch(togglePreloader(false));
     };
 // export const getProfileStatusRequest = (userId: number) => async (dispatch: Dispatch) => {
@@ -110,15 +110,15 @@ export const updateProfileStatusRequest = (status: string): AppThunk =>
     };
 export const updateProfileRequest = (profile: ProfileType, setStatus: (status: string) => void): AppThunk =>
     async (dispatch) => {
-        const resp = await profileAPI.updateProfile(profile)
-        if (resp.data.resultCode !== 0) {
-            setStatus(resp.data.messages[0]);
+        const data = await profileAPI.updateProfile(profile)
+        if (data.resultCode !== 0) {
+            setStatus(data.messages[0]);
         } else {
             dispatch(getProfileInfoRequest(profile.userId));
         }
-    };
+    }; 
 export const savePhoto = (file: File): AppThunk =>
     async (dispatch) => {
-        const resp = await profileAPI.savePhoto(file)
-        dispatch(setProfilePhoto(resp.data.data));
+        const data = await profileAPI.savePhoto(file)
+        dispatch(setProfilePhoto(data.data));
     };

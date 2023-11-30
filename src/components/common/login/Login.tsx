@@ -4,8 +4,8 @@ import {connect} from "react-redux";
 import {RootState} from "../../../redux/reduxStore";
 import {Navigate} from "react-router-dom";
 import LoginForm from "../FormControls/LoginForm";
-import {AuthUserDataT, loginRequest} from "../../../redux/authReducer";
-import {FormikErrors, FormikValues} from "formik";
+import {loginRequest} from "../../../redux/authReducer";
+import {FormikValues} from "formik";
 
 const Login: React.FC<MapStateToPropsT & MDTPT> =
     ({

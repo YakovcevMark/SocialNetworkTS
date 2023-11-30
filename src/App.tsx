@@ -1,26 +1,27 @@
 import React from 'react';
 import './App.css';
 import Navbar from "./components/Navbar/Navbar";
-import ProfileContainer from "./components/Profile/ProfileContainer";
+import {ProfileContainer} from "./components/Profile/ProfileContainer";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
+
 import {
     HashRouter,
     Route,
-    Routes
+    Routes,
 } from "react-router-dom";
+
 import styled from "styled-components";
 import {Provider} from "react-redux";
 import {store} from "./redux/reduxStore";
-import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/common/login/Login";
 import Users from "./components/Users/Users";
-
+import Header from "./components/Header/Header";
 const App: React.FC = () => {
     return (
         <Provider store={store}>
             <HashRouter>
                 <StyledApp>
-                    <HeaderContainer/>
+                    <Header/>
                     <Navbar/>
                     <div className="content">
                         <Routes>

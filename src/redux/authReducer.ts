@@ -1,15 +1,10 @@
-import {authAPI, securityAPI} from "../api/samuraiAPI";
-import {Dispatch} from "redux";
-import {FormikErrors, FormikValues} from "formik";
+import {authAPI, ResultCodes, securityAPI, SessionUserType} from "../api/samuraiAPI";
+import {FormikValues} from "formik";
 import {AppThunk} from "./reduxStore";
 
-export type AuthUserDataT = {
-    email: string
-    id: number
-    login: string
-}
+
 const initialState = {
-    data: {} as AuthUserDataT,
+    data: {} as SessionUserType,
     isAuth: false,
     captchaURL: ""
 }
@@ -30,36 +25,32 @@ export type AuthActionsType =
     ReturnType<typeof setAuthUserData>
     | ReturnType<typeof setCaptchaUrl>
     | ReturnType<typeof clearSessionUserData>
-export const setAuthUserData = (data: AuthUserDataT) => ({type: "SET_AUTH_USER_INFO", data} as const);
+export const setAuthUserData = (data: SessionUserType) => ({type: "SET_AUTH_USER_INFO", data} as const);
 export const setCaptchaUrl = (captchaURL: string) => ({type: "SET_CAPTCHA_URL", captchaURL} as const);
 export const clearSessionUserData = () => ({type: "CLEAR_SESSION_USER_DATA"} as const);
 
-export const getAuthUserData = ():AppThunk => async (dispatch) => {
-    const resp = await authAPI.authorization();
-    if (resp.data.resultCode === 0) {
-        dispatch(setAuthUserData({...resp.data.data}));
+export const getAuthUserData = (): AppThunk => async (dispatch) => {
+    const data = await authAPI.authorization();
+    if (data.resultCode === 0) {
+        dispatch(setAuthUserData({...data.data}));
     }
 }
-export const loginRequest = (data: FormikValues, setStatus: (status:string) => void):AppThunk =>
+export const loginRequest = (data: FormikValues, setStatus: (status: string) => void): AppThunk =>
     async (dispatch) => {
-    const resp = await authAPI.login({...data});
-    if (resp.data.resultCode !== 0) {
-        if (resp.data.resultCode === 10) {
-            const respWithCaptcha = await securityAPI.getCaptcha();
-            dispatch(setCaptchaUrl(respWithCaptcha.data.url))
+        const respData = await authAPI.login({...data});
+        if (respData.resultCode !== ResultCodes.Success) {
+            if (respData.resultCode === ResultCodes.CaptchaIsRequired) {
+                const respWithCaptcha = await securityAPI.getCaptcha();
+                dispatch(setCaptchaUrl(respWithCaptcha.data.url))
+            }
+            setStatus(respData.messages[0]);
+        } else {
+                dispatch(getAuthUserData());
         }
-        setStatus( resp.data.messages[0]);
-    } else {
-        const resp = await authAPI.authorization();
-        if (resp.data.resultCode === 0) {
-            dispatch(getAuthUserData());
-        }
-
     }
-}
-export const logoutRequest = ():AppThunk => async (dispatch) => {
-    const resp = await authAPI.logout();
-    if (resp.data.resultCode === 0)
+export const logoutRequest = (): AppThunk => async (dispatch) => {
+    const data = await authAPI.logout();
+    if (data.resultCode ===  ResultCodes.Success)
         dispatch(clearSessionUserData());
 }
 export default autReducer;

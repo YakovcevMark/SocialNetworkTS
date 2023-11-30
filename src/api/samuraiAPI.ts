@@ -8,7 +8,6 @@ export type SessionUserType = {
 }
 export type ContactT = {
     [key: string]: string
-
 }
 export type PhotosT = {
     small: string
@@ -23,9 +22,15 @@ export type ProfileType = {
     aboutMe?: string
     photos: PhotosT
 }
-type ResponseType<T = {}> = {
+export enum ResultCodes{
+    Success,
+    Error,
+    CaptchaIsRequired = 10
+}
+
+export type ResponseType<T = {}> = {
     data: T
-    resultCode: number
+    resultCode: ResultCodes
     messages: string[]
 }
 export type UserT = {
@@ -40,19 +45,17 @@ type UsersResponseT = {
     totalCount: number
     error: string
 }
-const settings = {
-    withCredentials: true,
-    headers: {
-        'API-KEY': '8d09abf8-2a50-4564-8e2f-d00a6cf398df'
-    }
-}
+
 const instance = axios.create({
+    withCredentials: true,
     baseURL: "https://social-network.samuraijs.com/api/1.0/",
-    ...settings
+    headers: {
+        "API-KEY": "8d09abf8-2a50-4564-8e2f-d00a6cf398df",
+    }
 })
 export const usersAPI = {
     getUsersRequest(pageSize: number, currentPage: number) {
-        return instance.get<UsersResponseT>(`users?count=${pageSize}&page=${currentPage}`);
+        return instance.get<UsersResponseT>(`users?count=${pageSize}&page=${currentPage}`).then(res => res.data);
     },
     makeFollow(userId: number) {
         return instance.post<ResponseType>(`follow/${userId}`);
@@ -63,13 +66,13 @@ export const usersAPI = {
 }
 export const authAPI = {
     authorization() {
-        return instance.get<ResponseType<SessionUserType>>(`auth/me`);
+        return instance.get<ResponseType<SessionUserType>>(`auth/me`).then(res => res.data);
     },
     login(data: FormikValues) {
-        return instance.post<ResponseType<{ userId: number }>>(`auth/login`, {...data});
+        return instance.post<ResponseType<{ userId: number }>>(`auth/login`, {...data}).then(res => res.data);
     },
     logout() {
-        return instance.delete<ResponseType>(`auth/login`);
+        return instance.delete<ResponseType>(`auth/login`).then(res => res.data);
     },
 }
 export const securityAPI = {
@@ -80,16 +83,16 @@ export const securityAPI = {
 
 export const profileAPI = {
     getProfile(userId: number) {
-        return instance.get<ProfileType>(`profile/${userId}`);
+        return instance.get<ProfileType>(`profile/${userId}`).then(res => res.data);
     },
     getStatus(userId: number) {
-        return instance.get<ResponseType>(`profile/status/${userId}`);
+        return instance.get<ResponseType>(`profile/status/${userId}`).then(res => res.data);
     },
     updateStatus(status: string) {
         return instance.put(`profile/status`, {status});
     },
     updateProfile(profile: ProfileType) {
-        return instance.put<ResponseType>(`profile`, {...profile});
+        return instance.put<ResponseType>(`profile`, {...profile}).then(res => res.data);
     },
     savePhoto(file: File) {
         const formData = new FormData();
@@ -98,6 +101,6 @@ export const profileAPI = {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
-        })
+        }).then(res => res.data)
     }
 }

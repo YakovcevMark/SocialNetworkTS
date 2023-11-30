@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import user from "../../../../assets/img/user.png"
 import styled from "styled-components";
 import Contact from "./Contact/Contact";
-import {useAppSelector} from "../../../../redux/hooks";
+import {useAppDispatch, useAppSelector} from "../../../../redux/hooks";
 import {ProfileStatus} from "./ProfileStatus/ProfileStatus";
+import {savePhoto} from "../../../../redux/profilePageReducer";
 
 const StyledProfileInfo = styled.div`
   display: grid;
@@ -18,21 +19,27 @@ const StyledProfileInfo = styled.div`
   margin: 5px;
 `
 type ProfileInfoPT = {
-    updateProfileStatusRequest:(s: string) => void
+
 }
 const ProfileInfo: React.FC<ProfileInfoPT> =
-    ({updateProfileStatusRequest}) => {
+    () => {
         const profileInfo = useAppSelector(state => state.profilePage.profileInfo)
         const sessionUserId = useAppSelector(state => state.auth.data.id)
+        const dispatch = useAppDispatch()
+        const savePhotoHandler = (e:ChangeEvent<HTMLInputElement>) => {
+            if(e.target.files && e.target.files.length){
+                dispatch(savePhoto(e.target.files[0]))
+            }
+        }
         const profilePhoto = user && profileInfo.photos.large
         const isOwner =  sessionUserId === profileInfo.userId
         return (
             <StyledProfileInfo>
                 <img src={profilePhoto} alt="Profile"/>
                 <div>
-                    {/*<div>*/}
-                    {/*    {isOwner && <input type="file" onChange={onSavePhoto}/>}*/}
-                    {/*</div>*/}
+                    <div>
+                        {isOwner && <input type="file" onChange={savePhotoHandler}/>}
+                    </div>
                     <div>
                         <b>FullName:</b> {profileInfo.fullName}
                     </div>
@@ -40,7 +47,6 @@ const ProfileInfo: React.FC<ProfileInfoPT> =
                         <b>Status:</b>
                         <ProfileStatus
                             isOwner={isOwner}
-                            updateProfileStatusRequest={updateProfileStatusRequest}
                         />
                     </div>
                     <div>

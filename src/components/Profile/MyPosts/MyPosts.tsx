@@ -1,8 +1,9 @@
-import React, {ChangeEvent, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 import Post from "./Post/Post";
 import styled from "styled-components";
-import {useAppSelector} from "../../../redux/hooks";
+import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
 import {AddNewPostForm} from "../../common/FormControls/AddNewPostForm";
+import {addPost} from "../../../redux/profilePageReducer";
 
 const StyledMyPosts = styled.div`
   padding: 5px;
@@ -12,10 +13,10 @@ const StyledMyPosts = styled.div`
     grid-template-columns: 3fr 2fr;
 `
 type MyPostsPT = {
-    addNewPost?:(postBody:string) => void
 }
-const MyPosts: React.FC<MyPostsPT> = ({addNewPost}) => {
+const MyPosts: React.FC<MyPostsPT> = () => {
     const postsData = useAppSelector(state => state.profilePage.postsData)
+    const dispatch = useAppDispatch()
     const posts = useMemo(() => {
         return postsData?.map(p => <Post key={p.id}
                                      postBody={p.postBody}
@@ -25,7 +26,7 @@ const MyPosts: React.FC<MyPostsPT> = ({addNewPost}) => {
         />)
     }, [postsData])
     const addNewPostHandler = (postBody:string) => {
-        addNewPost && postBody.trim() && addNewPost(postBody)
+        postBody.trim() && dispatch(addPost(postBody))
     }
     return (
         <StyledMyPosts>
