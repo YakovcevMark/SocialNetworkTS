@@ -31,7 +31,8 @@ const ProfileInfo: React.FC<ProfileInfoPT> =
                 dispatch(savePhoto(e.target.files[0]))
             }
         }
-        const profilePhoto = user && profileInfo.photos.large
+
+        const profilePhoto = profileInfo ? profileInfo.photos.large : user
         const isOwner =  sessionUserId === profileInfo.userId
         return (
             <StyledProfileInfo>

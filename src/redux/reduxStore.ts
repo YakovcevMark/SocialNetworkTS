@@ -4,6 +4,7 @@ import {DialogsActionsTypes, dialogsPageReducer} from "./dialogsPageReducer";
 import thunk, { ThunkAction, ThunkDispatch } from "redux-thunk"
 import autReducer, {AuthActionsType} from "./authReducer";
 import usersPageReducer, {UsersActionsType} from "./usersPageReducer";
+import appReducer, {AppReducerActionsType} from "./appReducer";
 
 const rootReducer = combineReducers({
     profilePage: profilePageReducer,
@@ -11,7 +12,7 @@ const rootReducer = combineReducers({
     usersPage: usersPageReducer,
     // sidebar: sidebarPageReducer,
     auth: autReducer,
-    // app: app_reducer,
+    app: appReducer,
 
 });
 
@@ -21,7 +22,8 @@ type AppActionsType =
     ProfileActionTypes |
     DialogsActionsTypes |
     UsersActionsType |
-    AuthActionsType
+    AuthActionsType |
+    AppReducerActionsType
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = ThunkDispatch<RootState, unknown, AppActionsType>

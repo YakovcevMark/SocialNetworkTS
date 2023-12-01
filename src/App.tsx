@@ -1,46 +1,47 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import Navbar from "./components/Navbar/Navbar";
-import {ProfileContainer} from "./components/Profile/ProfileContainer";
+import ProfileContainer from "./components/Profile/ProfileContainer";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
 
-import {
-    HashRouter,
-    Route,
-    Routes,
-} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 
 import styled from "styled-components";
-import {Provider} from "react-redux";
-import {store} from "./redux/reduxStore";
 import Login from "./components/common/login/Login";
 import Users from "./components/Users/Users";
 import Header from "./components/Header/Header";
+import {useAppDispatch, useAppSelector} from "./redux/hooks";
+import {initializeApp} from "./redux/appReducer";
+import Preloader from "./components/common/Preloader/Preloader";
+
 const App: React.FC = () => {
-    return (
-        <Provider store={store}>
-            <HashRouter>
-                <StyledApp>
-                    <Header/>
-                    <Navbar/>
-                    <div className="content">
-                        <Routes>
-                            <Route path={"/profile"}>
-                                <Route path={""} element={<ProfileContainer/>}/>
-                                <Route path={":userId"} element={<ProfileContainer/>} />
-                            </Route>
-                            <Route path={"/dialogs"} >
-                                <Route path={""} element={<DialogsContainer/>}/>
-                                <Route path={":userId"} element={<DialogsContainer/>} />
-                            </Route>
-                            <Route path={"/users"} element={<Users/>}/>
-                            <Route path={"/login"} element={<Login/>}/>
-                        </Routes>
-                    </div>
-                </StyledApp>
-            </HashRouter>
-        </Provider>
-    );
+    const dispatch = useAppDispatch()
+    const initialized = useAppSelector(state=>state.app.initialized)
+    useEffect(() => {
+        dispatch(initializeApp())
+    },[dispatch])
+
+    return initialized ? (
+        <StyledApp>
+            <Header/>
+            <Navbar/>
+            <div className="content">
+                <Routes>
+                    <Route path={"/profile"}>
+                        <Route path={""} element={<ProfileContainer/>}/>
+                        <Route path={":userId"} element={<ProfileContainer/>}/>
+                    </Route>
+                    <Route path={"/dialogs"}>
+                        <Route path={""} element={<DialogsContainer/>}/>
+                        <Route path={":userId"} element={<DialogsContainer/>}/>
+                    </Route>
+                    <Route path={"/users"} element={<Users/>}/>
+                    <Route path={"/login"} element={<Login/>}/>
+                </Routes>
+            </div>
+        </StyledApp>
+    )
+        : <Preloader/>
 }
 const StyledApp = styled.div`
   margin: 0 auto;

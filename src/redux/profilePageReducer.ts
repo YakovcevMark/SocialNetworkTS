@@ -8,8 +8,8 @@ export type PostT = {
     dislikesCount: number
 }
 
-export type ProfileStateT = typeof profilePage
-const profilePage = {
+export type ProfileStateT = typeof initState
+const initState = {
     postsData: [
         {id: 0, postBody: "Hi! I love you", likesCount: 15, dislikesCount: 0},
         {id: 1, postBody: "i really hate u!!!!!!!!!!!", likesCount: 20, dislikesCount: 0},
@@ -18,7 +18,7 @@ const profilePage = {
     status: '',
     isFetching: true,
 }
-export const profilePageReducer = (state: ProfileStateT = profilePage, action: ProfileActionTypes): ProfileStateT => {
+export const profilePageReducer = (state: ProfileStateT = initState, action: ProfileActionTypes): ProfileStateT => {
     switch (action.type) {
         case "ADD_POST":
             const newPost = {

@@ -58,7 +58,7 @@ const usersPageReducer = (state: UsersStateT = usersPage, action: UsersActionsTy
                 ...state,
                 currentPage: action.numberOfPage
             }
-        case "TOGGLE_PRELOADER":
+        case "TOGGLE_PRELOADER_Users":
             return {
                 ...state,
                 isFetching: action.isFetching
@@ -92,7 +92,7 @@ export const setTotalUsersCount = (count: number) =>
 export const setCurrentPage = (numberOfPage: number) =>
     ({type: "SET_CURRENT_PAGE", numberOfPage} as const);
 export const togglePreloader = (isFetching: boolean) =>
-    ({type: "TOGGLE_PRELOADER", isFetching} as const);
+    ({type: "TOGGLE_PRELOADER_Users", isFetching} as const);
 export const toggleFollowingInProgress = (isFetching: boolean, userId: number) =>
     ({
         type: "TOGGLE_FOLLOWING_IN_PROGRESS",

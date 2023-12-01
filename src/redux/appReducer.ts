@@ -1,23 +1,25 @@
-// import {getAuthUserData} from "./auth_reducer";
-//
-// const SET_INITIALIZED = "SET_INITIALIZED"
-//
-// const initialState = {
-//     initialized: false,
-// }
-// const app_reducer = (state = initialState, action) => {
-//     switch (action.type) {
-//         case SET_INITIALIZED:
-//             return {...state, initialized: true}
-//         default:
-//             return state;
-//     }
-// }
-// export const setInitialized = () => ({type: SET_INITIALIZED})
-//
-// export const initializeApp = () => async (dispatch) => {
-//     await dispatch(getAuthUserData())
-//     dispatch(setInitialized())
-//
-// }
-// export default app_reducer;
+import {getAuthUserData} from "./authReducer";
+import {AppThunk} from "./reduxStore";
+
+
+const initialState = {
+    initialized: false,
+}
+type AppReducerInitStateType = typeof initialState
+export type AppReducerActionsType = ReturnType<typeof setInitialized>
+const appReducer = (state:AppReducerInitStateType = initialState, action:AppReducerActionsType):AppReducerInitStateType => {
+    switch (action.type) {
+        case "SET_INITIALIZED":
+            return {...state, initialized: true}
+        default:
+            return state;
+    }
+}
+export const setInitialized = () => ({type: "SET_INITIALIZED"} as const )
+
+export const initializeApp = ():AppThunk => async (dispatch) => {
+    await dispatch(getAuthUserData())
+    dispatch(setInitialized())
+
+}
+export default appReducer;

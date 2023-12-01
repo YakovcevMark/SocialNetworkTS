@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {memo, useEffect} from 'react';
 import MyPosts from "./MyPosts/MyPosts";
 import ProfileInfo from "./MyPosts/ProfielInfo/ProfileInfo";
 import {
@@ -10,7 +10,7 @@ import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 
 
 
-export const ProfileContainer: React.FC = () => {
+const ProfileContainer: React.FC = () => {
 
     const {userId} = useParams()
     const isFetching = useAppSelector(state => state.profilePage.isFetching)
@@ -23,9 +23,10 @@ export const ProfileContainer: React.FC = () => {
     }, [userId, dispatch, currentUserId])
 
     return isFetching ? <Preloader/> : (
-        <div>
+        <>
             <ProfileInfo />
             <MyPosts />
-        </div>
+        </>
     );
 };
+export default memo(ProfileContainer);
